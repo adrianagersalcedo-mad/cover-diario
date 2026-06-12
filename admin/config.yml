@@ -1,0 +1,165 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Permite probar el CMS en local con: npx decap-server
+local_backend: true
+
+media_folder: public/uploads
+public_folder: /uploads
+
+# ─── COLECCIÓN 1: COVERS PUBLICADOS ──────────────────────────────────────────
+collections:
+  - name: covers
+    label: "Covers publicados"
+    label_singular: "Cover"
+    description: "Los covers ya programados o publicados. Cada fichero = un día."
+    folder: content/covers
+    create: true
+    format: json
+    extension: json
+    slug: "{{fecha}}"
+    identifier_field: id
+    summary: "Pista {{numeroPista}} · {{interpreteCover}} versiona a {{artistaOriginal}} · {{fecha}}"
+    sortable_fields: ["fecha", "numeroPista", "interpreteCover"]
+    view_filters:
+      - label: "Este mes"
+        field: fecha
+        pattern: "2026"
+    fields:
+      - label: "ID interno"
+        name: id
+        widget: string
+        hint: "Formato: cover-347"
+
+      - label: "YouTube ID"
+        name: youtubeId
+        widget: string
+        hint: "Solo el ID, ej: 8AHCfZTRGiI (de youtube.com/watch?v=8AHCfZTRGiI)"
+        pattern: ['^[A-Za-z0-9_-]{11}$', "Debe ser un ID de YouTube válido (11 caracteres)"]
+
+      - label: "Fecha de publicación"
+        name: fecha
+        widget: datetime
+        format: "YYYY-MM-DD"
+        date_format: "DD/MM/YYYY"
+        time_format: false
+        hint: "Fecha en que se publica esta pista"
+
+      - label: "Número de pista"
+        name: numeroPista
+        widget: number
+        value_type: int
+        min: 1
+        hint: "Número correlativo del mixtape"
+
+      - label: "Título de la canción"
+        name: tituloCancion
+        widget: string
+
+      - label: "Intérprete del cover"
+        name: interpreteCover
+        widget: string
+        hint: "Quien hace la versión"
+
+      - label: "Canal del intérprete (URL)"
+        name: canalCoverUrl
+        widget: string
+        hint: "URL completa del canal de YouTube del intérprete"
+
+      - label: "Artista/banda original"
+        name: artistaOriginal
+        widget: string
+        hint: "Quien compuso/grabó el original"
+
+      - label: "Vídeo original (URL)"
+        name: videoOriginalUrl
+        widget: string
+        hint: "URL del vídeo original en YouTube"
+
+      - label: "Texto curatorial"
+        name: textoCuratorial
+        widget: text
+        hint: "Separa párrafos con una línea en blanco. Es el corazón del proyecto."
+
+# ─── COLECCIÓN 2: PROPUESTAS PENDIENTES ──────────────────────────────────────
+  - name: proposals
+    label: "Propuestas pendientes"
+    label_singular: "Propuesta"
+    description: "Candidatos sin publicar. Cambia estado a 'aprobada' + rellena fecha y nº pista para publicar."
+    folder: content/proposals
+    create: true
+    format: json
+    extension: json
+    slug: "{{youtubeId}}"
+    identifier_field: youtubeId
+    summary: "{{estado}} · {{interpreteCover}} — {{tituloCancion}}"
+    sortable_fields: ["estado", "interpreteCover"]
+    view_filters:
+      - label: "Pendientes"
+        field: estado
+        pattern: "pendiente"
+      - label: "Aprobadas (pendiente de build)"
+        field: estado
+        pattern: "aprobada"
+      - label: "Descartadas"
+        field: estado
+        pattern: "descartada"
+    fields:
+      - label: "YouTube ID"
+        name: youtubeId
+        widget: string
+        hint: "Solo el ID del vídeo (11 caracteres)"
+
+      - label: "Estado"
+        name: estado
+        widget: select
+        options: ["pendiente", "aprobada", "descartada"]
+        default: "pendiente"
+        hint: "Cambia a 'aprobada' + rellena fecha y nº pista → el próximo build lo mueve a Covers"
+
+      - label: "Título de la canción"
+        name: tituloCancion
+        widget: string
+
+      - label: "Intérprete del cover"
+        name: interpreteCover
+        widget: string
+
+      - label: "Canal del intérprete (URL)"
+        name: canalCoverUrl
+        widget: string
+        required: false
+
+      - label: "Artista/banda original"
+        name: artistaOriginal
+        widget: string
+        required: false
+
+      - label: "Vídeo original (URL)"
+        name: videoOriginalUrl
+        widget: string
+        required: false
+
+      - label: "Texto curatorial"
+        name: textoCuratorial
+        widget: text
+        required: false
+        hint: "Puedes dejarlo en blanco en la propuesta y escribirlo antes de aprobar"
+
+      - label: "Fecha de publicación"
+        name: fecha
+        widget: datetime
+        format: "YYYY-MM-DD"
+        date_format: "DD/MM/YYYY"
+        time_format: false
+        required: false
+        hint: "Obligatorio antes de aprobar"
+
+      - label: "Número de pista"
+        name: numeroPista
+        widget: number
+        value_type: int
+        min: 1
+        required: false
+        hint: "Obligatorio antes de aprobar"

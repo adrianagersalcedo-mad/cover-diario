@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoverDiario — Un cover al día</title>
+  <meta name="description" content="Cada día, un cover. El mixtape infinito.">
+  <meta name="theme-color" content="#EFEAD9">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="index.html" class="wordmark" aria-label="CoverDiario — inicio">
+      COVERDIARIO
+      <small>El mixtape infinito</small>
+    </a>
+    <div class="header-right">
+      <span class="eyebrow-box active">HOY</span>
+      <a href="archivo.html" class="eyebrow-box" style="text-decoration:none">ARCHIVO</a>
+      <a href="acerca.html"  class="eyebrow-box" style="text-decoration:none">ACERCA DE</a>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main id="main-content">
+
+    <!-- MONO BAR -->
+    <div class="mono-bar" aria-label="Metadatos de pista">
+      <span class="piece" id="meta-num">PISTA Nº —</span>
+      <span class="piece sep">·</span>
+      <span class="piece" id="meta-date">—</span>
+      <span class="piece sep">·</span>
+      <span class="piece">HOY SUENA</span>
+    </div>
+
+    <!-- MEDIA + COLUMNS -->
+    <div class="media-section">
+      <!-- LEFT META -->
+      <div class="meta-col">
+        <div>
+          <p class="meta-label">Intérprete</p>
+          <p class="meta-val" id="meta-interprete">—</p>
+        </div>
+        <div>
+          <p class="meta-label">Fecha</p>
+          <p class="meta-val" id="meta-fecha-col">—</p>
+        </div>
+      </div>
+
+      <!-- PLAYER -->
+      <div class="player-wrap" role="region" aria-label="Reproductor de vídeo">
+        <iframe
+          id="yt-iframe"
+          src="about:blank"
+          allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+          title="Cargando…"
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- RIGHT META -->
+      <div class="meta-col" style="text-align:right;align-items:flex-end">
+        <div>
+          <p class="out-now">ESCÚCHALA EN ↗</p>
+          <a id="link-yt"       href="#" target="_blank" rel="noopener noreferrer">Ver en YouTube ↗</a>
+          <a id="link-canal"    href="#" target="_blank" rel="noopener noreferrer">Canal del intérprete ↗</a>
+          <a id="link-original" href="#" target="_blank" rel="noopener noreferrer">Ver original ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRMA VISUAL -->
+    <section class="firma" aria-label="Firma de la pista">
+      <h1 class="cover-name" id="cover-name">—</h1>
+      <span class="original-script" id="original-script" aria-label="versiona a"></span>
+    </section>
+
+    <!-- SONG STRIPE -->
+    <div class="song-stripe" aria-hidden="true">
+      <span class="meta-label" style="opacity:.55;letter-spacing:.2em">VERSIONA</span>
+      <span class="song-title-val" id="stripe-title">—</span>
+      <span style="opacity:.4">·</span>
+      <span id="stripe-original">—</span>
+    </div>
+
+    <!-- CURATORIAL -->
+    <section class="curatorial-section" aria-label="Texto curatorial">
+      <div id="curatorial-text"></div>
+    </section>
+
+    <!-- CREDITS -->
+    <section class="credits-section" aria-label="Créditos">
+      <div class="cred-row">
+        <span class="cred-key">Cover</span>
+        <span class="cred-val" id="cred-cover-name">—</span>
+        <a class="cred-link" id="cred-cover-link" href="#" target="_blank" rel="noopener noreferrer">Canal ↗</a>
+      </div>
+      <div class="cred-row">
+        <span class="cred-key">Original</span>
+        <span class="cred-val" id="cred-orig-name">—</span>
+        <a class="cred-link" id="cred-orig-link" href="#" target="_blank" rel="noopener noreferrer">Ver original ↗</a>
+      </div>
+      <div class="cred-row">
+        <span class="cred-key">Vídeo</span>
+        <a class="cred-link" id="cred-yt-link" href="#" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+        <span style="opacity:.35">· Reproductor oficial de inserción</span>
+      </div>
+    </section>
+
+    <!-- SHARE -->
+    <div class="share-row">
+      <span class="share-label">Compartir pista</span>
+      <button class="btn-share" id="btn-share" type="button" data-title="">Compartir ↗</button>
+      <span class="share-notice" id="share-notice" aria-live="polite">Enlace copiado</span>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p class="footer-legal">
+      Proyecto sin ánimo de lucro y sin publicidad. Vídeos mostrados mediante el reproductor
+      oficial de YouTube (youtube-nocookie.com). No se aloja ni redistribuye contenido.
+      Sin afiliación con YouTube ni Google. Retirada de contenido:
+      <a href="mailto:[PLACEHOLDER_EMAIL]">[PLACEHOLDER_EMAIL]</a> ·
+      <a href="legal.html">Aviso legal →</a>
+    </p>
+    <nav class="footer-nav" aria-label="Navegación secundaria">
+      <a href="archivo.html">Archivo</a>
+      <a href="acerca.html">Acerca de</a>
+      <a href="legal.html">Legal</a>
+    </nav>
+  </footer>
+
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>

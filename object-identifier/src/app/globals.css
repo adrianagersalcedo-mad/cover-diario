@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --font-hanken: 'Hanken Grotesk', sans-serif;
+  --font-space: 'Space Grotesk', sans-serif;
+  --ink: #2A2113;
+  --mut: #988353;
+  --bg: #FFF8E6;
+  --line: #F1E4B8;
+  --grad: linear-gradient(120deg, #FFC53D 0%, #FFA31F 52%, #FF8A2B 100%);
+  --vio: #B4690E;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-hanken);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes vb-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes vb-pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes vb-burst {
+  0%   { opacity: 0.6; transform: scale(0.7); }
+  100% { opacity: 0;   transform: scale(1.7); }
+}
+@keyframes vb-glow {
+  0%, 100% { box-shadow: 0 14px 30px -10px rgba(251,78,120,.5); }
+  50%       { box-shadow: 0 0 0 14px rgba(251,78,120,.08), 0 14px 30px -10px rgba(251,78,120,.6); }
+}
+@keyframes vb-seg-fill {
+  from { width: 0%; }
+}
+
+.anim-rise  { animation: vb-rise 0.65s cubic-bezier(.2,.85,.25,1) both; }
+.anim-pop   { animation: vb-pop  0.75s cubic-bezier(.2,1.5,.4,1)  both; }
+.anim-burst { animation: vb-burst 1.1s ease-out 0.3s both; }
+.anim-glow  { animation: vb-glow  2.4s ease-in-out 1s infinite; }

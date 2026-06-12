@@ -1,0 +1,154 @@
+/* ─── PALETTE ROTATION ────────────────────────────────────────────────────── */
+const PALETTES = [
+  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', player: '#12A357' },
+  { bg: '#F45DAE', frame: '#16110D', text: '#16110D', player: '#EF5226' },
+  { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9', player: '#E8B53C' },
+  { bg: '#E8B53C', frame: '#16110D', text: '#16110D', player: '#EF5226' },
+];
+
+function paletteForDate(isoDate) {
+  const days = Math.floor(new Date(isoDate).getTime() / 86400000);
+  return PALETTES[((days % 4) + 4) % 4];
+}
+
+function applyPalette(p) {
+  const r = document.documentElement.style;
+  r.setProperty('--day-bg',    p.bg);
+  r.setProperty('--day-frame', p.frame);
+  r.setProperty('--day-text',  p.text);
+  r.setProperty('--verde',     p.player); // re-uses --verde for player border
+  document.body.style.background = p.bg;
+  document.body.style.color      = p.text;
+}
+
+/* ─── DATA LOADING ────────────────────────────────────────────────────────── */
+async function loadList() {
+  const res = await fetch('content/covers/_list.json');
+  if (!res.ok) throw new Error('No list');
+  return res.json(); // ["2026-06-09", ...]
+}
+
+async function loadCover(date) {
+  const res = await fetch(`content/covers/${date}.json`);
+  if (!res.ok) throw new Error(`No cover for ${date}`);
+  return res.json();
+}
+
+async function getTodayCover() {
+  const today = new Date().toISOString().slice(0, 10);
+  const list  = await loadList();
+  const date  = list.includes(today)
+    ? today
+    : list.slice().sort().at(-1); // most recent
+  return loadCover(date);
+}
+
+/* ─── DATE FORMAT ─────────────────────────────────────────────────────────── */
+function fmtDate(iso) {
+  const [y, m, d] = iso.split('-');
+  return new Date(+y, +m - 1, +d)
+    .toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+    .toUpperCase().replace(/\./g, '');
+}
+
+/* ─── RENDER ──────────────────────────────────────────────────────────────── */
+function renderCover(c) {
+  // Palette
+  applyPalette(paletteForDate(c.fecha));
+
+  // Mono bar
+  setText('meta-num',  `PISTA Nº ${c.numeroPista}`);
+  setText('meta-date', fmtDate(c.fecha));
+
+  // Video
+  const iframe = document.getElementById('yt-iframe');
+  iframe.src   = `https://www.youtube-nocookie.com/embed/${c.youtubeId}?rel=0&modestbranding=1`;
+  iframe.title = `${c.tituloCancion} — ${c.interpreteCover} (cover)`;
+
+  // Left meta
+  setText('meta-interprete', c.interpreteCover);
+  setText('meta-fecha-col',  fmtDate(c.fecha));
+
+  // Right meta links
+  setLink('link-yt',       `https://www.youtube.com/watch?v=${c.youtubeId}`,   'Ver en YouTube ↗');
+  setLink('link-canal',    c.canalCoverUrl,                                     'Canal del intérprete ↗');
+  setLink('link-original', c.videoOriginalUrl,                                  'Ver original ↗');
+
+  // Firma visual
+  setText('cover-name',     c.interpreteCover.toUpperCase());
+  setText('original-script',`↺ versiona a ${c.artistaOriginal} · "${c.tituloCancion}"`);
+
+  // Song stripe
+  setText('stripe-title',   `"${c.tituloCancion}"`);
+  setText('stripe-original', c.artistaOriginal);
+
+  // Curatorial
+  const el = document.getElementById('curatorial-text');
+  el.innerHTML = c.textoCuratorial
+    .split(/\n\n+/).filter(Boolean)
+    .map(p => `<p>${p.trim()}</p>`).join('');
+
+  // Credits
+  setText('cred-cover-name',   c.interpreteCover);
+  setLink('cred-cover-link',   c.canalCoverUrl, 'Canal ↗');
+  setText('cred-orig-name',    `${c.artistaOriginal} · "${c.tituloCancion}"`);
+  setLink('cred-orig-link',    c.videoOriginalUrl, 'Ver original ↗');
+  setLink('cred-yt-link',      `https://www.youtube.com/watch?v=${c.youtubeId}`, 'YouTube ↗');
+
+  // Share data
+  const btn = document.getElementById('btn-share');
+  btn.dataset.title = `Pista ${c.numeroPista}: ${c.interpreteCover} versiona a ${c.artistaOriginal}`;
+
+  // Page title
+  document.title = `Pista ${c.numeroPista} · ${c.interpreteCover} — CoverDiario`;
+}
+
+/* ─── HELPERS ─────────────────────────────────────────────────────────────── */
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setLink(id, href, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.href        = href;
+  el.textContent = text;
+}
+
+/* ─── SHARE ───────────────────────────────────────────────────────────────── */
+function initShare() {
+  const btn    = document.getElementById('btn-share');
+  const notice = document.getElementById('share-notice');
+  btn.addEventListener('click', async () => {
+    const url  = window.location.href;
+    const text = btn.dataset.title || 'CoverDiario';
+    if (navigator.share) {
+      try { await navigator.share({ title: text, url }); } catch {}
+      return;
+    }
+    try { await navigator.clipboard.writeText(url); }
+    catch {
+      const t = Object.assign(document.createElement('textarea'),
+        { value: url, style: 'position:fixed;opacity:0' });
+      document.body.append(t); t.select(); document.execCommand('copy');
+      t.remove();
+    }
+    notice.classList.add('show');
+    setTimeout(() => notice.classList.remove('show'), 2500);
+  });
+}
+
+/* ─── INIT ────────────────────────────────────────────────────────────────── */
+async function init() {
+  try {
+    const cover = await getTodayCover();
+    renderCover(cover);
+    initShare();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('main-content').innerHTML =
+      '<p class="state-msg">No se pudo cargar la pista de hoy.</p>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);

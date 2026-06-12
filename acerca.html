@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acerca de — CoverDiario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <a href="index.html" class="wordmark" aria-label="CoverDiario — inicio">
+      COVERDIARIO
+      <small>El mixtape infinito</small>
+    </a>
+    <div class="header-right">
+      <a href="index.html"   class="eyebrow-box" style="text-decoration:none">HOY</a>
+      <a href="archivo.html" class="eyebrow-box" style="text-decoration:none">ARCHIVO</a>
+      <span class="eyebrow-box active">ACERCA DE</span>
+    </div>
+  </header>
+
+  <main>
+    <article class="text-page">
+      <h1>Qué es esto</h1>
+
+      <h2>Un cover al día</h2>
+      <p>CoverDiario publica un solo cover cada día: un vídeo de YouTube con un texto que
+      intenta explicar por qué esa versión existe, qué hace diferente al original, y qué
+      tiene de propio quien la interpreta.</p>
+
+      <p>Cada entrada no es "el post de hoy". Es una pista numerada de un álbum en curso —
+      el mixtape que nunca termina. Cuando llegues aquí estaremos en la pista que sea,
+      y todas las anteriores seguirán en el archivo.</p>
+
+      <h2>Por qué los covers</h2>
+      <p>Un cover es una conversación entre dos momentos de la historia de una canción.
+      El original dice algo; la versión responde, discrepa, amplifica o suaviza. A veces
+      la respuesta revela algo que el original no sabía que tenía. A veces lo destruye,
+      en el buen sentido.</p>
+
+      <p>Buscamos el tipo de cover que hace que ya no puedas escuchar el original de la
+      misma manera. Esa segunda escucha, ese momento en que algo conocido se vuelve
+      extraño y luego, de golpe, más real.</p>
+
+      <h2>El criterio</h2>
+      <p>No hay un género ni una época. El único filtro es que la versión diga algo propio:
+      que no sea una copia bien ejecutada, sino una relectura con voz propia.</p>
+
+      <h2>Sin ánimo de lucro</h2>
+      <p>Este proyecto no tiene publicidad, no vende nada y no está monetizado. Los vídeos
+      se reproducen mediante el reproductor oficial de YouTube; no se aloja ni redistribuye
+      ningún contenido.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-legal">
+      Proyecto sin ánimo de lucro y sin publicidad.
+      <a href="legal.html">Aviso legal →</a>
+    </p>
+    <nav class="footer-nav">
+      <a href="index.html">Hoy</a>
+      <a href="archivo.html">Archivo</a>
+      <a href="legal.html">Legal</a>
+    </nav>
+  </footer>
+
+</div>
+<script>
+  // Apply today's palette to static pages too
+  const PALETTES = [
+    { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D' },
+    { bg: '#F45DAE', frame: '#16110D', text: '#16110D' },
+    { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9' },
+    { bg: '#E8B53C', frame: '#16110D', text: '#16110D' },
+  ];
+  const days = Math.floor(Date.now() / 86400000);
+  const p    = PALETTES[((days % 4) + 4) % 4];
+  document.documentElement.style.setProperty('--day-bg',    p.bg);
+  document.documentElement.style.setProperty('--day-frame', p.frame);
+  document.documentElement.style.setProperty('--day-text',  p.text);
+  document.body.style.background = p.bg;
+  document.body.style.color      = p.text;
+</script>
+</body>
+</html>

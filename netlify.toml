@@ -1,0 +1,12 @@
+[build]
+  command   = "node scripts/build.js"
+  publish   = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Netlify Identity redirect tras login
+[[redirects]]
+  from   = "/admin"
+  to     = "/admin/index.html"
+  status = 200

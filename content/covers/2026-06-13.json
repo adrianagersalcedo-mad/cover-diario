@@ -1,0 +1,12 @@
+{
+  "id": "cover-348",
+  "youtubeId": "PLACEHOLDER_YT_ID_HOY",
+  "fecha": "2026-06-13",
+  "numeroPista": 348,
+  "tituloCancion": "Título de la canción",
+  "interpreteCover": "Nombre del intérprete",
+  "canalCoverUrl": "https://www.youtube.com/@PLACEHOLDER_CANAL",
+  "artistaOriginal": "Artista original",
+  "videoOriginalUrl": "https://www.youtube.com/watch?v=PLACEHOLDER_ORIGINAL_HOY",
+  "textoCuratorial": "Aquí va el texto curatorial de esta pista. Sustituye este contenido con el texto real sobre el cover: por qué esta versión, qué hace diferente al original, qué tiene de propio el intérprete.\n\nEste es el corazón del proyecto: el texto que explica la dualidad del cover, el original visto bajo otra luz.\n\nTercero párrafo opcional para más contexto o cierre."
+}

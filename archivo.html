@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archivo — CoverDiario</title>
+  <meta name="description" content="Todas las pistas del mixtape infinito.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <a href="index.html" class="wordmark" aria-label="CoverDiario — inicio">
+      COVERDIARIO
+      <small>El mixtape infinito</small>
+    </a>
+    <div class="header-right">
+      <a href="index.html"  class="eyebrow-box" style="text-decoration:none">HOY</a>
+      <span class="eyebrow-box active">ARCHIVO</span>
+      <a href="acerca.html" class="eyebrow-box" style="text-decoration:none">ACERCA DE</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="archive-header">
+      <h1 class="archive-title">Archivo</h1>
+      <span class="archive-count" id="count-label">Cargando…</span>
+    </div>
+
+    <div class="archive-nav">
+      <button id="btn-prev" disabled>← Anterior</button>
+      <span class="page-label" id="page-label"></span>
+      <button id="btn-next" disabled>Siguiente →</button>
+    </div>
+
+    <ul class="tracklist" id="tracklist" aria-label="Lista de pistas">
+      <li><p class="state-msg">Cargando…</p></li>
+    </ul>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-legal">
+      Proyecto sin ánimo de lucro y sin publicidad.
+      <a href="legal.html">Aviso legal →</a>
+    </p>
+    <nav class="footer-nav" aria-label="Navegación secundaria">
+      <a href="index.html">Hoy</a>
+      <a href="acerca.html">Acerca de</a>
+      <a href="legal.html">Legal</a>
+    </nav>
+  </footer>
+
+</div>
+<script src="js/archivo.js"></script>
+</body>
+</html>

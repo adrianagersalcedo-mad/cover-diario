@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aviso legal — CoverDiario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <a href="index.html" class="wordmark" aria-label="CoverDiario — inicio">
+      COVERDIARIO
+      <small>El mixtape infinito</small>
+    </a>
+    <div class="header-right">
+      <a href="index.html"   class="eyebrow-box" style="text-decoration:none">HOY</a>
+      <a href="archivo.html" class="eyebrow-box" style="text-decoration:none">ARCHIVO</a>
+      <a href="acerca.html"  class="eyebrow-box" style="text-decoration:none">ACERCA DE</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="text-page">
+      <h1>Aviso legal</h1>
+
+      <h2>Naturaleza del proyecto</h2>
+      <p>CoverDiario es un proyecto editorial sin ánimo de lucro. No genera ingresos de
+      ningún tipo: sin publicidad, sin monetización, sin venta de productos o servicios.</p>
+
+      <h2>Reproductor de YouTube</h2>
+      <p>Todos los vídeos se muestran mediante el <strong>reproductor de inserción oficial
+      de YouTube</strong> a través de <code>youtube-nocookie.com</code>.</p>
+      <ul>
+        <li>CoverDiario no aloja ni redistribuye ningún archivo de vídeo o audio.</li>
+        <li>Los vídeos se reproducen directamente desde servidores de YouTube.</li>
+        <li>El uso del reproductor se rige por los
+          <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">
+          Términos de Servicio de YouTube</a>.</li>
+      </ul>
+
+      <h2>Derechos de autor</h2>
+      <p>Títulos de canciones, nombres de artistas y demás referencias pertenecen a sus
+      respectivos titulares. Los textos curatoriales son de elaboración propia.</p>
+
+      <h2>Sin afiliación con YouTube</h2>
+      <p>CoverDiario no tiene relación comercial ni editorial con YouTube LLC ni Google LLC.</p>
+
+      <h2>Retirada de contenido</h2>
+      <p>Si eres titular de derechos y deseas la retirada de contenido, escríbenos a
+      <a href="mailto:[PLACEHOLDER_EMAIL]">[PLACEHOLDER_EMAIL]</a> indicando el contenido
+      afectado y acreditación de titularidad. Aplicamos el principio de precaución
+      retirando el contenido mientras se verifica.</p>
+
+      <h2>Privacidad</h2>
+      <p>CoverDiario no recoge datos personales de forma directa: sin registro, sin cookies
+      propias de seguimiento, sin analítica de terceros instalada por este sitio. El
+      reproductor de YouTube puede establecer sus propias cookies según su política.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-legal">
+      Retirada de contenido: <a href="mailto:[PLACEHOLDER_EMAIL]">[PLACEHOLDER_EMAIL]</a>
+    </p>
+    <nav class="footer-nav">
+      <a href="index.html">Hoy</a>
+      <a href="archivo.html">Archivo</a>
+      <a href="acerca.html">Acerca de</a>
+    </nav>
+  </footer>
+
+</div>
+<script>
+  const PALETTES = [
+    { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D' },
+    { bg: '#F45DAE', frame: '#16110D', text: '#16110D' },
+    { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9' },
+    { bg: '#E8B53C', frame: '#16110D', text: '#16110D' },
+  ];
+  const days = Math.floor(Date.now() / 86400000);
+  const p    = PALETTES[((days % 4) + 4) % 4];
+  document.documentElement.style.setProperty('--day-bg',    p.bg);
+  document.documentElement.style.setProperty('--day-frame', p.frame);
+  document.documentElement.style.setProperty('--day-text',  p.text);
+  document.body.style.background = p.bg;
+  document.body.style.color      = p.text;
+</script>
+</body>
+</html>
