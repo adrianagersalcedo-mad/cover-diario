@@ -41,7 +41,7 @@ function renderPage() {
     const isToday = c.fecha === today;
     return `
       <li class="${isToday ? 't-today' : ''}">
-        <a href="index.html">
+        <a href="pista?fecha=${c.fecha}">
           <span class="t-num">${String(c.numeroPista).padStart(3, '0')}</span>
           <span class="t-body">
             <span class="t-song">${c.tituloCancion}</span>

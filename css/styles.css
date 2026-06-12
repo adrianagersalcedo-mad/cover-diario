@@ -325,6 +325,15 @@ body::before {
 }
 .cred-link:hover { opacity: .5; }
 
+/* ─── TRACK NAV (pista anterior / siguiente) ──────────────────────────────── */
+.track-nav {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding-block: 1.5rem .5rem;
+}
+
 /* ─── SHARE ───────────────────────────────────────────────────────────────── */
 .share-row {
   display: flex;
