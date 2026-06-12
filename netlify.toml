@@ -5,7 +5,17 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# Netlify Identity redirect tras login
+[functions]
+  directory = "netlify/functions"
+
+# Cron: ejecuta el discovery cada día a las 03:00 UTC
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
+[functions.discovery]
+  schedule = "0 3 * * *"
+
+# Redirect /admin a /admin/index.html
 [[redirects]]
   from   = "/admin"
   to     = "/admin/index.html"
