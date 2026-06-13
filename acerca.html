@@ -82,6 +82,24 @@
       se reproducen mediante el reproductor oficial de YouTube; no se aloja ni redistribuye
       ningún contenido.</p>
     </article>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter-block" aria-label="Suscripción al boletín">
+      <p class="newsletter-heading">Boletín semanal</p>
+      <p class="newsletter-sub">Un correo a la semana con la selección de la semana. Sin publicidad, sin spam.</p>
+      <form class="newsletter-form" novalidate>
+        <div class="newsletter-row">
+          <label class="newsletter-label" for="nl-email-acerca">Tu correo</label>
+          <div class="newsletter-controls">
+            <input class="newsletter-input" id="nl-email-acerca" type="email" name="email"
+              placeholder="nombre@ejemplo.com" autocomplete="email" required>
+            <button class="newsletter-btn" type="submit">Suscribirme →</button>
+          </div>
+          <p class="newsletter-status" aria-live="polite" role="status"></p>
+        </div>
+      </form>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -99,18 +117,20 @@
 </div>
 <script>
   const PALETTES = [
-    { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D' },
-    { bg: '#C97A9C', frame: '#16110D', text: '#16110D' },
-    { bg: '#7AB897', frame: '#EF5226', text: '#16110D' },
-    { bg: '#C9A04A', frame: '#16110D', text: '#16110D' },
+    { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', hi: '#C03C0C' },
+    { bg: '#C97A9C', frame: '#16110D', text: '#16110D', hi: '#16110D' },
+    { bg: '#7AB897', frame: '#EF5226', text: '#16110D', hi: '#16110D' },
+    { bg: '#C9A04A', frame: '#16110D', text: '#16110D', hi: '#16110D' },
   ];
   const days = Math.floor(Date.now() / 86400000);
   const p    = PALETTES[((days % 4) + 4) % 4];
   document.documentElement.style.setProperty('--day-bg',    p.bg);
   document.documentElement.style.setProperty('--day-frame', p.frame);
   document.documentElement.style.setProperty('--day-text',  p.text);
+  document.documentElement.style.setProperty('--day-hi',    p.hi);
   document.body.style.background = p.bg;
   document.body.style.color      = p.text;
 </script>
+<script src="js/newsletter.js"></script>
 </body>
 </html>

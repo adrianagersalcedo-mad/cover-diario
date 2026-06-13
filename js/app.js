@@ -44,6 +44,78 @@ async function getTodayCover() {
   return loadCover(date);
 }
 
+/* ─── RECOMMENDATION ──────────────────────────────────────────────────────── */
+async function loadAllCovers(dates) {
+  const results = await Promise.all(
+    dates.map(d => fetch(`content/covers/${d}.json`).then(r => r.json()).catch(() => null))
+  );
+  return results.filter(Boolean);
+}
+
+const TAG_REASONS = {
+  'acustico':       'Otra versión a una guitarra',
+  'intimo':         'Misma intimidad de cuarto',
+  'piano':          'También a piano',
+  'retiro':         'Mismo gesto: bajarse del mundo',
+  'folk':           'Folk hasta los huesos',
+  'rock':           'Del mismo palo',
+  'soul':           'Misma alma',
+  'live':           'También en directo',
+  'john-lennon':    'Versiona al mismo autor',
+  'paul-mccartney': 'Versiona al mismo autor',
+  'bob-dylan':      'Versiona al mismo autor',
+  'elliott-smith':  'Versiona al mismo autor',
+};
+
+function pickRecommendation(current, allCovers) {
+  const currentTags = current.tags || [];
+  let best = null, bestCount = -1, bestTag = null;
+
+  for (const c of allCovers) {
+    if (c.fecha === current.fecha) continue;
+    const shared = (c.tags || []).filter(t => currentTags.includes(t));
+    if (shared.length > bestCount) {
+      bestCount = shared.length;
+      best = c;
+      const priority = Object.keys(TAG_REASONS);
+      bestTag = shared.sort((a, b) => priority.indexOf(a) - priority.indexOf(b))[0] || null;
+    }
+  }
+
+  if (!best) {
+    best = allCovers
+      .filter(c => c.fecha !== current.fecha)
+      .sort((a, b) => b.fecha.localeCompare(a.fecha))[0] || null;
+  }
+
+  const razon = (bestTag && TAG_REASONS[bestTag]) || 'Siguiente en el mixtape';
+  return { cover: best, razon };
+}
+
+function renderRecommendation(rec, razon) {
+  const band = document.getElementById('recm-band');
+  if (!band || !rec) return;
+
+  const perf  = (rec.interpreteCover || '').trim().toUpperCase();
+  const meta  = `versiona a ${rec.artistaOriginal} · "${rec.tituloCancion}"`;
+  const label = `Siguiente en la cinta: ${rec.interpreteCover.trim()} versiona a ${rec.artistaOriginal}, "${rec.tituloCancion}". ${razon}.`;
+
+  const seg = `<span class="recm-seg">` +
+    `<span class="recm-eye">↺ Siguiente en la cinta</span>` +
+    `<span class="recm-perf">${perf}</span>` +
+    `<span class="recm-meta">${meta}</span>` +
+    `<span class="recm-rea">${razon}</span>` +
+    `<span class="recm-arr">↗</span>` +
+    `<span class="recm-sep">/</span>` +
+    `</span>`;
+
+  band.querySelector('.recm-track').innerHTML = seg.repeat(4);
+  band.href = `pista?fecha=${rec.fecha}`;
+  band.setAttribute('aria-label', label);
+  band.dataset.animate = '1';
+  band.hidden = false;
+}
+
 /* ─── DATE FORMAT ─────────────────────────────────────────────────────────── */
 function fmtDate(iso) {
   const [y, m, d] = iso.split('-');
@@ -142,9 +214,18 @@ function initShare() {
 /* ─── INIT ────────────────────────────────────────────────────────────────── */
 async function init() {
   try {
-    const cover = await getTodayCover();
+    const list  = await loadList();
+    const today = new Date().toISOString().slice(0, 10);
+    const date  = list.includes(today) ? today : list.slice().sort().at(-1);
+    const cover = await loadCover(date);
     renderCover(cover);
     initShare();
+    if (list.length > 1) {
+      loadAllCovers(list).then(allCovers => {
+        const { cover: rec, razon } = pickRecommendation(cover, allCovers);
+        if (rec) renderRecommendation(rec, razon);
+      });
+    }
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =

@@ -97,6 +97,11 @@
       <span class="original-script" id="original-script" aria-label="versiona a"></span>
     </section>
 
+    <!-- RECOMMENDATION BAND -->
+    <a class="recm" id="recm-band" href="#" hidden aria-label="">
+      <div class="recm-track" aria-hidden="true"></div>
+    </a>
+
     <!-- SONG STRIPE -->
     <div class="song-stripe" aria-hidden="true">
       <span class="meta-label" style="opacity:.55;letter-spacing:.2em">VERSIONA</span>
@@ -136,6 +141,23 @@
       <span class="share-notice" id="share-notice" aria-live="polite">Enlace copiado</span>
     </div>
 
+    <!-- NEWSLETTER -->
+    <section class="newsletter-block" aria-label="Suscripción al boletín">
+      <p class="newsletter-heading">Boletín semanal</p>
+      <p class="newsletter-sub">Un correo a la semana con la selección de la semana. Sin publicidad, sin spam.</p>
+      <form class="newsletter-form" novalidate>
+        <div class="newsletter-row">
+          <label class="newsletter-label" for="nl-email-home">Tu correo</label>
+          <div class="newsletter-controls">
+            <input class="newsletter-input" id="nl-email-home" type="email" name="email"
+              placeholder="nombre@ejemplo.com" autocomplete="email" required>
+            <button class="newsletter-btn" type="submit">Suscribirme →</button>
+          </div>
+          <p class="newsletter-status" aria-live="polite" role="status"></p>
+        </div>
+      </form>
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -156,5 +178,6 @@
 
 </div>
 <script src="js/app.js"></script>
+<script src="js/newsletter.js"></script>
 </body>
 </html>
