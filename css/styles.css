@@ -7,9 +7,9 @@
   --papel:     #EFEAD9;
   --tinta:     #16110D;
   --bermellón: #EF5226;
-  --rosa:      #F45DAE;
-  --verde:     #12A357;
-  --amarillo:  #E8B53C;
+  --rosa:      #C97A9C;
+  --verde:     #7AB897;
+  --amarillo:  #C9A04A;
 
   /* Dynamic day palette (overridden by JS) */
   --day-bg:    #EFEAD9;
@@ -82,8 +82,7 @@ body::before {
   letter-spacing: .18em;
   font-weight: 400;
   text-transform: uppercase;
-  color: var(--tinta);
-  opacity: .6;
+  color: color-mix(in srgb, var(--day-text) 62%, var(--day-bg));
   margin-top: .3rem;
 }
 .header-right {
@@ -130,16 +129,15 @@ body::before {
   font-size: .7rem;
   letter-spacing: .15em;
   text-transform: uppercase;
-  color: var(--tinta);
+  color: color-mix(in srgb, var(--day-text) 70%, var(--day-bg));
   padding-block: 1.25rem;
   display: flex;
   align-items: center;
   gap: .75rem;
   flex-wrap: wrap;
   border-bottom: 1px solid currentColor;
-  opacity: .7;
 }
-.mono-bar .sep { opacity: .35; }
+.mono-bar .sep { color: color-mix(in srgb, var(--day-text) 35%, var(--day-bg)); }
 
 @media (prefers-reduced-motion: no-preference) {
   .mono-bar .piece {
@@ -177,7 +175,7 @@ body::before {
 .meta-col .meta-label {
   font-size: .55rem;
   letter-spacing: .2em;
-  opacity: .55;
+  color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
   margin-bottom: .15rem;
 }
 .meta-col .meta-val {
@@ -279,17 +277,16 @@ body::before {
 
 /* ─── CURATORIAL ──────────────────────────────────────────────────────────── */
 .curatorial-section {
-  background: var(--papel);
-  border: 2px solid var(--tinta);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  max-width: 68ch;
+  border-top: 1px solid color-mix(in srgb, var(--day-text) 30%, var(--day-bg));
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+  max-width: 66ch;
   margin-block: 1rem 2.5rem;
 }
 .curatorial-section p {
   font-family: var(--font-body);
   font-size: clamp(1rem, 2vw, 1.1rem);
   line-height: 1.8;
-  color: var(--tinta);
+  color: var(--day-text);
   margin-bottom: 1.2em;
 }
 .curatorial-section p:last-child { margin-bottom: 0; }
@@ -313,7 +310,7 @@ body::before {
   align-items: baseline;
 }
 .cred-key {
-  opacity: .5;
+  color: color-mix(in srgb, var(--day-text) 52%, var(--day-bg));
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -347,7 +344,7 @@ body::before {
   font-size: .6rem;
   letter-spacing: .18em;
   text-transform: uppercase;
-  opacity: .55;
+  color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
 }
 .btn-share {
   font-family: var(--font-mono);
@@ -391,8 +388,7 @@ body::before {
   font-size: .6rem;
   letter-spacing: .06em;
   text-transform: uppercase;
-  color: var(--tinta);
-  opacity: .6;
+  color: color-mix(in srgb, var(--day-text) 62%, var(--day-bg));
   line-height: 1.7;
   max-width: 52ch;
 }
@@ -414,10 +410,10 @@ body::before {
 .footer-nav a {
   text-decoration: underline;
   text-underline-offset: 3px;
-  opacity: .6;
-  transition: opacity .15s;
+  color: color-mix(in srgb, var(--day-text) 62%, var(--day-bg));
+  transition: color .15s;
 }
-.footer-nav a:hover { opacity: 1; }
+.footer-nav a:hover { color: var(--day-text); }
 
 /* ─── ARCHIVE PAGE ────────────────────────────────────────────────────────── */
 .archive-header {
@@ -442,7 +438,7 @@ body::before {
   font-size: .65rem;
   letter-spacing: .15em;
   text-transform: uppercase;
-  opacity: .55;
+  color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
 }
 .archive-nav {
   display: flex;
@@ -472,7 +468,7 @@ body::before {
   font-size: .62rem;
   letter-spacing: .1em;
   text-transform: uppercase;
-  opacity: .55;
+  color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
   padding-inline: .5rem;
 }
 
@@ -513,14 +509,14 @@ body::before {
   font-size: .6rem;
   letter-spacing: .1em;
   text-transform: uppercase;
-  opacity: .55;
+  color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
 }
 .t-date {
   font-family: var(--font-mono);
   font-size: .62rem;
   letter-spacing: .08em;
   text-transform: uppercase;
-  opacity: .5;
+  color: color-mix(in srgb, var(--day-text) 52%, var(--day-bg));
   white-space: nowrap;
   text-align: right;
 }
@@ -570,7 +566,7 @@ body::before {
   font-size: .72rem;
   letter-spacing: .15em;
   text-transform: uppercase;
-  opacity: .5;
+  color: color-mix(in srgb, var(--day-text) 52%, var(--day-bg));
   padding-block: 4rem;
   text-align: center;
 }

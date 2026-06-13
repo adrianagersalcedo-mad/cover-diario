@@ -1,9 +1,9 @@
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
 const PALETTES = [
-  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', player: '#12A357' },
-  { bg: '#F45DAE', frame: '#16110D', text: '#16110D', player: '#EF5226' },
-  { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9', player: '#E8B53C' },
-  { bg: '#E8B53C', frame: '#16110D', text: '#16110D', player: '#EF5226' },
+  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', player: '#3D8A60' },
+  { bg: '#C97A9C', frame: '#16110D', text: '#16110D', player: '#EF5226' },
+  { bg: '#7AB897', frame: '#EF5226', text: '#16110D', player: '#C9A04A' },
+  { bg: '#C9A04A', frame: '#16110D', text: '#16110D', player: '#EF5226' },
 ];
 function paletteForDate(iso) {
   const days = Math.floor(new Date(iso).getTime() / 86400000);
@@ -116,7 +116,7 @@ function renderCover(c, list) {
     `Pista ${c.numeroPista}: ${c.interpreteCover} versiona a ${c.artistaOriginal}`;
 
   // Page title & meta
-  document.title = `Pista ${c.numeroPista} · ${c.interpreteCover} — CoverDiario`;
+  document.title = `Pista ${c.numeroPista} · ${c.interpreteCover} — Refrito`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.content = `${c.interpreteCover} versiona "${c.tituloCancion}" de ${c.artistaOriginal}`;
 }
@@ -127,7 +127,7 @@ function initShare() {
   const notice = document.getElementById('share-notice');
   btn.addEventListener('click', async () => {
     const url  = window.location.href;
-    const text = btn.dataset.title || 'CoverDiario';
+    const text = btn.dataset.title || 'Refrito';
     if (navigator.share) {
       try { await navigator.share({ title: text, url }); } catch {}
       return;

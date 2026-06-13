@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acerca de — CoverDiario</title>
+  <title>Acerca de — Refrito</title>
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
@@ -12,8 +13,8 @@
 <div class="page">
 
   <header class="site-header">
-    <a href="index.html" class="wordmark" aria-label="CoverDiario — inicio">
-      COVERDIARIO
+    <a href="index.html" class="wordmark" aria-label="Refrito — inicio">
+      <img src="logo.svg" alt="" aria-hidden="true" width="42" height="27" style="display:inline-block;vertical-align:middle;margin-right:.5rem">REFRITO
       <small>El mixtape del rock amateur</small>
     </a>
     <div class="header-right">
@@ -28,7 +29,7 @@
       <h1>Rock amateur.<br>Un cover al día.</h1>
 
       <h2>De qué va esto</h2>
-      <p>CoverDiario publica cada día un cover de rock hecho por alguien amateur: un vídeo
+      <p>Refrito publica cada día un cover de rock hecho por alguien amateur: un vídeo
       de YouTube grabado en un cuarto, un garaje, un sótano. Sin sello, sin estudio, sin
       presupuesto. A menudo sin apenas suscriptores.</p>
 
@@ -85,9 +86,9 @@
 <script>
   const PALETTES = [
     { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D' },
-    { bg: '#F45DAE', frame: '#16110D', text: '#16110D' },
-    { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9' },
-    { bg: '#E8B53C', frame: '#16110D', text: '#16110D' },
+    { bg: '#C97A9C', frame: '#16110D', text: '#16110D' },
+    { bg: '#7AB897', frame: '#EF5226', text: '#16110D' },
+    { bg: '#C9A04A', frame: '#16110D', text: '#16110D' },
   ];
   const days = Math.floor(Date.now() / 86400000);
   const p    = PALETTES[((days % 4) + 4) % 4];

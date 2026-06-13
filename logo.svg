@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 36" width="56" height="36" fill="none" role="img" aria-label="Refrito">
+  <circle cx="18" cy="18" r="16.5" stroke="#16110D" stroke-width="3"/>
+  <circle cx="18" cy="18" r="11.5" stroke="#16110D" stroke-width="1.5"/>
+  <circle cx="18" cy="18" r="6.5" stroke="#16110D" stroke-width="1.5"/>
+  <circle cx="18" cy="18" r="2.5" fill="#16110D"/>
+  <rect x="34" y="15" width="20" height="6" rx="3" fill="#EF5226"/>
+</svg>
