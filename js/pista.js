@@ -164,7 +164,6 @@ function renderCover(c, list) {
   setLink('cred-yt-link',    `https://www.youtube.com/watch?v=${c.youtubeId}`, 'YouTube ↗');
 
   // Prev / Next navigation
-  const today  = new Date().toISOString().slice(0, 10);
   const sorted = list.filter(d => d <= today).sort();
   const idx    = sorted.indexOf(c.fecha);
   const prevEl = document.getElementById('nav-prev');
