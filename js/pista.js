@@ -165,6 +165,11 @@ async function init() {
     const [cover, list] = await Promise.all([loadCover(fecha), loadList()]);
     renderCover(cover, list);
     initShare();
+    // Registra visita en localStorage para el ranking del archivo
+    try {
+      const k = `rfv_${fecha}`;
+      localStorage.setItem(k, (parseInt(localStorage.getItem(k) || '0') + 1).toString());
+    } catch {}
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =

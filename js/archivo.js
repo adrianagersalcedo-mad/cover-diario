@@ -18,6 +18,7 @@ function fmtDate(iso) {
 const PER_PAGE = 20;
 let allCovers = [];
 let page = 0;
+let sortMode = 'fecha';
 
 async function loadAll() {
   const listRes = await fetch('content/covers/_list.json');
@@ -30,11 +31,23 @@ async function loadAll() {
   return covers;
 }
 
+function getVisits(fecha) {
+  try { return parseInt(localStorage.getItem(`rfv_${fecha}`) || '0'); } catch { return 0; }
+}
+
+function sortedCovers() {
+  if (sortMode === 'ranking') {
+    return [...allCovers].sort((a, b) => getVisits(b.fecha) - getVisits(a.fecha));
+  }
+  return [...allCovers].sort((a, b) => b.fecha.localeCompare(a.fecha));
+}
+
 function renderPage() {
   const today   = new Date().toISOString().slice(0, 10);
-  const total   = allCovers.length;
+  const sorted  = sortedCovers();
+  const total   = sorted.length;
   const start   = page * PER_PAGE;
-  const slice   = allCovers.slice(start, start + PER_PAGE);
+  const slice   = sorted.slice(start, start + PER_PAGE);
   const list    = document.getElementById('tracklist');
 
   list.innerHTML = slice.map(c => {
@@ -48,6 +61,7 @@ function renderPage() {
             <span class="t-sub">${c.interpreteCover} ↺ ${c.artistaOriginal}</span>
           </span>
           <span class="t-date">${fmtDate(c.fecha)}${isToday ? ' · HOY' : ''}</span>
+          ${sortMode === 'ranking' && getVisits(c.fecha) > 0 ? `<span class="t-visits">${getVisits(c.fecha)}×</span>` : ''}
         </a>
       </li>`;
   }).join('');
@@ -80,6 +94,16 @@ async function init() {
 
   document.getElementById('btn-prev').addEventListener('click', () => { page--; renderPage(); window.scrollTo(0, 0); });
   document.getElementById('btn-next').addEventListener('click', () => { page++; renderPage(); window.scrollTo(0, 0); });
+
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sortMode = btn.dataset.sort;
+      page = 0;
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPage();
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);

@@ -456,6 +456,44 @@ body::before {
   text-transform: uppercase;
   color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
 }
+.archive-sort {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: 1.2rem;
+}
+.sort-label {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .5;
+}
+.sort-btn {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border: 1.5px solid color-mix(in srgb, var(--day-text) 30%, var(--day-bg));
+  padding: .3em .75em;
+  background: transparent;
+  color: var(--day-text);
+  cursor: pointer;
+  opacity: .6;
+  transition: opacity .15s, border-color .15s;
+}
+.sort-btn.active {
+  border-color: var(--day-text);
+  opacity: 1;
+}
+.t-visits {
+  font-family: var(--font-mono);
+  font-size: .55rem;
+  color: var(--bermellón);
+  opacity: .8;
+  margin-left: .4rem;
+}
+
 .archive-nav {
   display: flex;
   align-items: center;
