@@ -86,6 +86,39 @@ function buildList() {
   console.log(`  ✓ _list.json → ${dates.length} pista(s)`);
 }
 
+// ─── 3. generate sitemap.xml ──────────────────────────────────────────────────
+
+function buildSitemap() {
+  const listPath = path.join(COVERS_DIR, '_list.json');
+  const dates    = JSON.parse(fs.readFileSync(listPath, 'utf-8'));
+  const BASE     = 'https://refrito.org';
+
+  const staticPages = [
+    { loc: `${BASE}/`,        priority: '1.0', changefreq: 'daily'   },
+    { loc: `${BASE}/archivo`, priority: '0.7', changefreq: 'daily'   },
+    { loc: `${BASE}/acerca`,  priority: '0.3', changefreq: 'monthly' },
+  ];
+
+  const coverEntries = dates.map(d =>
+    `  <url>\n    <loc>${BASE}/pista?fecha=${d}</loc>\n    <lastmod>${d}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.6</priority>\n  </url>`
+  );
+
+  const staticEntries = staticPages.map(p =>
+    `  <url>\n    <loc>${p.loc}</loc>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
+  );
+
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...staticEntries,
+    ...coverEntries,
+    '</urlset>',
+  ].join('\n');
+
+  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), xml + '\n');
+  console.log(`  ✓ sitemap.xml → ${staticPages.length + dates.length} URL(s)`);
+}
+
 // ─── main ──────────────────────────────────────────────────────────────────────
 
 console.log('\nRefrito build\n─────────────');
@@ -93,4 +126,6 @@ console.log('Sincronizando propuestas aprobadas…');
 syncApproved();
 console.log('Generando _list.json…');
 buildList();
+console.log('Generando sitemap.xml…');
+buildSitemap();
 console.log('─────────────────\nListo.\n');
