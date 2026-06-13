@@ -170,7 +170,7 @@ function renderCover(c) {
 
   // Share data
   const btn = document.getElementById('btn-share');
-  btn.dataset.title = `Pista ${c.numeroPista}: ${c.interpreteCover} versiona a ${c.artistaOriginal}`;
+  if (btn) btn.dataset.title = `Pista ${c.numeroPista}: ${c.interpreteCover} versiona a ${c.artistaOriginal}`;
 
   // Page title
   document.title = `Pista ${c.numeroPista} · ${c.interpreteCover} — Refrito`;
@@ -212,6 +212,29 @@ function initShare() {
 }
 
 /* ─── INIT ────────────────────────────────────────────────────────────────── */
+function renderNav(cover, list) {
+  const sorted  = list.slice().sort();
+  const idx     = sorted.indexOf(cover.fecha);
+  const prevEl  = document.getElementById('nav-prev');
+  const nextEl  = document.getElementById('nav-next');
+  if (!prevEl || !nextEl) return;
+
+  if (idx > 0) {
+    prevEl.href = `pista?fecha=${sorted[idx - 1]}`;
+    prevEl.style.opacity = '1';
+  } else {
+    prevEl.style.opacity = '.3';
+    prevEl.style.pointerEvents = 'none';
+  }
+  if (idx < sorted.length - 1) {
+    nextEl.href = `pista?fecha=${sorted[idx + 1]}`;
+    nextEl.style.opacity = '1';
+  } else {
+    nextEl.style.opacity = '.3';
+    nextEl.style.pointerEvents = 'none';
+  }
+}
+
 async function init() {
   try {
     const list  = await loadList();
@@ -219,13 +242,8 @@ async function init() {
     const date  = list.includes(today) ? today : list.slice().sort().at(-1);
     const cover = await loadCover(date);
     renderCover(cover);
+    renderNav(cover, list);
     initShare();
-    if (list.length > 1) {
-      loadAllCovers(list).then(allCovers => {
-        const { cover: rec, razon } = pickRecommendation(cover, allCovers);
-        if (rec) renderRecommendation(rec, razon);
-      });
-    }
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =
