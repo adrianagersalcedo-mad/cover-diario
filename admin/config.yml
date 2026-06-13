@@ -82,6 +82,12 @@ collections:
         widget: text
         hint: "Separa párrafos con una línea en blanco. Es el corazón del proyecto."
 
+      - label: "Etiquetas"
+        name: tags
+        widget: list
+        required: false
+        hint: "Tags para el motor de recomendación. Ej: acustico, intimo, retiro, folk, rock, piano, soul, live, john-lennon, bob-dylan…"
+
 # ─── COLECCIÓN 2: PROPUESTAS PENDIENTES ──────────────────────────────────────
   - name: proposals
     label: "Propuestas pendientes"

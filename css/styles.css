@@ -259,6 +259,83 @@ body::before {
   padding-left: .5rem;
 }
 
+/* ─── RECOMMENDATION BAND ────────────────────────────────────────────────── */
+.recm {
+  display: block;
+  text-decoration: none;
+  background: var(--tinta);
+  color: var(--papel);
+  overflow: hidden;
+  white-space: nowrap;
+  margin-inline: calc(-1 * var(--page-pad));
+  margin-block: 2rem;
+  cursor: pointer;
+}
+.recm:hover { background: #0a0805; }
+.recm-track {
+  display: inline-flex;
+  align-items: center;
+  padding-block: .85rem;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .recm[data-animate="1"] .recm-track { animation: recm-scroll 28s linear infinite; }
+  .recm[data-animate="1"]:hover .recm-track { animation-play-state: paused; }
+}
+@keyframes recm-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.recm-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  padding-inline: 1.25rem;
+}
+.recm-eye {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(239,234,217,.45);
+}
+.recm-perf {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  color: var(--day-bg); /* day bg always contrasts with ink */
+}
+.recm-meta {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(239,234,217,.7);
+}
+.recm-rea {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--day-bg);
+  color: var(--tinta);
+  padding: .2em .65em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.recm-arr {
+  font-family: var(--font-mono);
+  font-size: .95rem;
+  color: var(--day-bg);
+}
+.recm-sep {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: rgba(239,234,217,.3);
+}
+.recm:focus-visible { outline: 3px solid var(--day-bg); outline-offset: -3px; }
+
 /* ─── SONG TITLE STRIPE ───────────────────────────────────────────────────── */
 .song-stripe {
   background: var(--tinta);
