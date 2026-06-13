@@ -188,13 +188,6 @@ function renderCover(c, list) {
   document.getElementById('btn-share').dataset.title =
     `Pista ${c.numeroPista}: ${c.interpreteCover} versiona a ${c.artistaOriginal}`;
 
-  // Botón descarga tarjeta Instagram
-  const dlBtn = document.getElementById('btn-download');
-  if (dlBtn && c.fecha) {
-    dlBtn.href     = `/.netlify/functions/og-image?fecha=${c.fecha}&download=1`;
-    dlBtn.download = `refrito-${c.fecha}.png`;
-  }
-
   // Page title & meta
   document.title = `Pista ${c.numeroPista} · ${c.interpreteCover} — Refrito`;
   const desc = document.querySelector('meta[name="description"]');
@@ -238,18 +231,6 @@ async function init() {
     const [cover, list] = await Promise.all([loadCover(fecha), loadList()]);
     renderCover(cover, list);
     initShare();
-    // Registra visita en localStorage para el ranking del archivo
-    try {
-      const k = `rfv_${fecha}`;
-      localStorage.setItem(k, (parseInt(localStorage.getItem(k) || '0') + 1).toString());
-    } catch {}
-    // Recomendación (no bloquea el render principal)
-    if (list.length > 1) {
-      loadAllCovers(list).then(allCovers => {
-        const { cover: rec, razon } = pickRecommendation(cover, allCovers);
-        if (rec) renderRecommendation(rec, razon);
-      });
-    }
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =
