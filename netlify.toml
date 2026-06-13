@@ -16,6 +16,24 @@
   function = "pista-og"
 
 [[redirects]]
+  from   = "/pista"
+  to     = "/pista.html"
+  status = 200
+  force  = false
+
+[[redirects]]
+  from   = "/archivo"
+  to     = "/archivo.html"
+  status = 200
+  force  = false
+
+[[redirects]]
+  from   = "/acerca"
+  to     = "/acerca.html"
+  status = 200
+  force  = false
+
+[[redirects]]
   from   = "/og-image/:fecha.png"
   to     = "/.netlify/functions/og-image?fecha=:fecha"
   status = 200
