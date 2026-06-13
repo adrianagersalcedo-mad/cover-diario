@@ -1,9 +1,9 @@
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
 const PALETTES = [
-  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', player: '#3D8A60' },
-  { bg: '#C97A9C', frame: '#16110D', text: '#16110D', player: '#EF5226' },
-  { bg: '#7AB897', frame: '#EF5226', text: '#16110D', player: '#C9A04A' },
-  { bg: '#C9A04A', frame: '#16110D', text: '#16110D', player: '#EF5226' },
+  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', player: '#3D8A60', hi: '#C03C0C' },
+  { bg: '#C97A9C', frame: '#16110D', text: '#16110D', player: '#EF5226', hi: '#16110D' },
+  { bg: '#7AB897', frame: '#EF5226', text: '#16110D', player: '#C9A04A', hi: '#16110D' },
+  { bg: '#C9A04A', frame: '#16110D', text: '#16110D', player: '#3D8A60', hi: '#16110D' },
 ];
 function paletteForDate(iso) {
   const days = Math.floor(new Date(iso).getTime() / 86400000);
@@ -14,6 +14,7 @@ function applyPalette(p) {
   r.setProperty('--day-bg',    p.bg);
   r.setProperty('--day-frame', p.frame);
   r.setProperty('--day-text',  p.text);
+  r.setProperty('--day-hi',    p.hi);
   r.setProperty('--verde',     p.player);
   document.body.style.background = p.bg;
   document.body.style.color      = p.text;

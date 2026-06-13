@@ -15,6 +15,7 @@
   --day-bg:    #EFEAD9;
   --day-frame: #EF5226;
   --day-text:  #16110D;
+  --day-hi:    #C03C0C;  /* accent text — always ≥4.5:1 on --day-bg */
 
   --frame-w: clamp(6px, 1vw, 10px);
   --page-pad: clamp(1rem, 5vw, 3rem);
@@ -31,10 +32,10 @@
 html { font-size: 16px; scroll-behavior: smooth; }
 img, video, iframe { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
-a:focus-visible { outline: 3px solid var(--bermellón); outline-offset: 2px; }
-button:focus-visible { outline: 3px solid var(--bermellón); outline-offset: 2px; }
+a:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+button:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
 
-/* ─── FRAME BORDER ────────────────────────────────────────────────────────── */
+/* ─── BODY + FRAME ────────────────────────────────────────────────────────── */
 body {
   background: var(--day-bg);
   color: var(--day-text);
@@ -42,20 +43,22 @@ body {
   position: relative;
   transition: background .35s, color .35s;
 }
+/* Frame integrado: position:absolute (no fixed) — scrolls con el documento */
 body::before {
   content: '';
-  position: fixed;
+  position: absolute;
   inset: 0;
   border: var(--frame-w) solid var(--day-frame);
-  z-index: 900;
   pointer-events: none;
+  transition: border-color .35s;
+  z-index: 1;
 }
 
 /* ─── PAGE WRAPPER ────────────────────────────────────────────────────────── */
 .page {
   max-width: var(--max-w);
   margin-inline: auto;
-  padding: calc(var(--frame-w) + 1rem) var(--page-pad) var(--page-pad);
+  padding: 1.25rem var(--page-pad) var(--page-pad);
 }
 
 /* ─── HEADER ──────────────────────────────────────────────────────────────── */
@@ -185,7 +188,7 @@ body::before {
 .meta-col .out-now {
   font-size: .7rem;
   letter-spacing: .12em;
-  color: var(--bermellón);
+  color: var(--day-hi);
   font-weight: 700;
   margin-bottom: .35rem;
 }
@@ -236,7 +239,7 @@ body::before {
   letter-spacing: -.02em;
   text-transform: uppercase;
   line-height: .88;
-  color: var(--day-frame);
+  color: var(--day-hi);
   position: relative;
   z-index: 1;
   word-break: break-word;
@@ -366,7 +369,7 @@ body::before {
   font-size: .6rem;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--bermellón);
+  color: var(--day-hi);
   opacity: 0;
   transition: opacity .25s;
 }
@@ -377,15 +380,15 @@ body::before {
   font-size: .65rem;
   letter-spacing: .12em;
   text-transform: uppercase;
-  border: 2px solid var(--bermellón);
+  border: 2px solid var(--day-hi);
   padding: .35em .9em;
   background: transparent;
-  color: var(--bermellón);
+  color: var(--day-hi);
   text-decoration: none;
   transition: background .15s, color .15s;
 }
 .btn-download:hover {
-  background: var(--bermellón);
+  background: var(--day-hi);
   color: var(--day-bg);
 }
 
@@ -447,7 +450,7 @@ body::before {
   letter-spacing: -.02em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--bermellón);
+  color: var(--day-hi);
 }
 .archive-count {
   font-family: var(--font-mono);
@@ -547,7 +550,7 @@ body::before {
   font-family: var(--font-mono);
   font-size: .65rem;
   letter-spacing: .08em;
-  color: var(--bermellón);
+  color: var(--day-hi);
   font-weight: 700;
 }
 .t-body .t-song {
@@ -574,7 +577,7 @@ body::before {
   white-space: nowrap;
   text-align: right;
 }
-.t-today .t-date { color: var(--bermellón); opacity: 1; font-weight: 700; }
+.t-today .t-date { color: var(--day-hi); opacity: 1; font-weight: 700; }
 
 /* ─── ABOUT / LEGAL PAGE ──────────────────────────────────────────────────── */
 .text-page {
@@ -586,7 +589,7 @@ body::before {
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   letter-spacing: -.02em;
   text-transform: uppercase;
-  color: var(--bermellón);
+  color: var(--day-hi);
   line-height: .9;
   margin-bottom: 2rem;
 }

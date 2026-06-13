@@ -1,8 +1,8 @@
 const PALETTES = [
-  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D' },
-  { bg: '#F45DAE', frame: '#16110D', text: '#16110D' },
-  { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9' },
-  { bg: '#E8B53C', frame: '#16110D', text: '#16110D' },
+  { bg: '#EFEAD9', frame: '#EF5226', text: '#16110D', hi: '#C03C0C' },
+  { bg: '#F45DAE', frame: '#16110D', text: '#16110D', hi: '#16110D' },
+  { bg: '#12A357', frame: '#EF5226', text: '#EFEAD9', hi: '#EFEAD9' },
+  { bg: '#E8B53C', frame: '#16110D', text: '#16110D', hi: '#16110D' },
 ];
 function paletteForDate(iso) {
   const days = Math.floor(new Date(iso).getTime() / 86400000);
@@ -81,6 +81,7 @@ async function init() {
   document.documentElement.style.setProperty('--day-bg',    p.bg);
   document.documentElement.style.setProperty('--day-frame', p.frame);
   document.documentElement.style.setProperty('--day-text',  p.text);
+  document.documentElement.style.setProperty('--day-hi',    p.hi);
   document.body.style.background = p.bg;
   document.body.style.color      = p.text;
 
