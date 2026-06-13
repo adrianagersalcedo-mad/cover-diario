@@ -236,10 +236,9 @@ body::before {
   letter-spacing: -.02em;
   text-transform: uppercase;
   line-height: .88;
-  color: var(--bermellón);
+  color: var(--day-frame);
   position: relative;
   z-index: 1;
-  /* prevent line wrapping from looking broken */
   word-break: break-word;
   hyphens: auto;
 }
