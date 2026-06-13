@@ -164,24 +164,23 @@ function renderCover(c, list) {
   setLink('cred-yt-link',    `https://www.youtube.com/watch?v=${c.youtubeId}`, 'YouTube ↗');
 
   // Prev / Next navigation
-  const sorted = list.slice().sort();
+  const today  = new Date().toISOString().slice(0, 10);
+  const sorted = list.filter(d => d <= today).sort();
   const idx    = sorted.indexOf(c.fecha);
   const prevEl = document.getElementById('nav-prev');
   const nextEl = document.getElementById('nav-next');
 
   if (idx > 0) {
     prevEl.href = `pista?fecha=${sorted[idx - 1]}`;
-    prevEl.style.opacity = '1';
+    prevEl.classList.remove('disabled');
   } else {
-    prevEl.style.opacity = '.3';
-    prevEl.style.pointerEvents = 'none';
+    prevEl.classList.add('disabled');
   }
   if (idx < sorted.length - 1) {
     nextEl.href = `pista?fecha=${sorted[idx + 1]}`;
-    nextEl.style.opacity = '1';
+    nextEl.classList.remove('disabled');
   } else {
-    nextEl.style.opacity = '.3';
-    nextEl.style.pointerEvents = 'none';
+    nextEl.classList.add('disabled');
   }
 
   // Share

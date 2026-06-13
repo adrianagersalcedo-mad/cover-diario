@@ -1,18 +1,19 @@
 {
-  "id": "cover-006",
-  "youtubeId": "EkS4ukSdfnM",
+  "id": "cover-007",
+  "youtubeId": "mk9rrZi3dKE",
   "fecha": "2026-06-18",
-  "numeroPista": 6,
-  "tituloCancion": "The Wind Cries Mary",
-  "interpreteCover": "Acantha Lang",
-  "canalCoverUrl": "https://www.youtube.com/@AcanthaLang",
-  "artistaOriginal": "Jimi Hendrix",
-  "videoOriginalUrl": "https://www.youtube.com/watch?v=Z7K5VCCdOEM",
-  "textoCuratorial": "'The Wind Cries Mary' es la canción donde Hendrix demuestra que no necesitaba la velocidad para impresionar. Los acordes —esas transiciones de Eb a D a C a Bb— ya lo hacen todo. La canción no pide distorsión, pide que la dejen en paz.\n\nAcantha Lang la toca en Sofar London, acústica, y lo que aparece es la canción desnuda: que debajo de todo el ruido de Hendrix había un compositor que entendía la melodía mejor que casi todos sus contemporáneos.",
+  "numeroPista": 7,
+  "tituloCancion": "Lobo López",
+  "interpreteCover": "Mario Morgaño",
+  "canalCoverUrl": "https://www.youtube.com/@Mariomorganho",
+  "artistaOriginal": "Kiko Veneno",
+  "videoOriginalUrl": "https://www.youtube.com/watch?v=8xhQyvQB55E",
+  "textoCuratorial": "Kiko Veneno escribió 'Lobo López' con esa mezcla suya de flamenco y rock psicodélico que nadie más ha sabido hacer igual en el pop español. La canción tiene algo de cuento y algo de broma y algo de melancolía, todo al mismo tiempo.\n\nMario Morgaño la versiona en las Pijamming Sessions —ese formato íntimo, casi de salón— y le da un aire que baja el volumen pero no la extrañeza. Sigue sonando a Veneno aunque suene a otra cosa.",
   "tags": [
     "acustico",
-    "jimi-hendrix",
-    "live",
+    "folk",
+    "kiko-veneno",
+    "español",
     "intimo"
   ]
 }

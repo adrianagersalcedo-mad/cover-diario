@@ -1,18 +1,18 @@
 {
-  "id": "cover-005",
-  "youtubeId": "7NYFdaq4ONs",
+  "id": "cover-006",
+  "youtubeId": "EkS4ukSdfnM",
   "fecha": "2026-06-17",
-  "numeroPista": 5,
-  "tituloCancion": "Down South",
-  "interpreteCover": "The Beatles Family",
-  "canalCoverUrl": "https://www.youtube.com/@TheBeatlesFamily",
-  "artistaOriginal": "Paul McCartney",
-  "videoOriginalUrl": "https://www.youtube.com/watch?v=P3Gumrrx93k",
-  "textoCuratorial": "Paul McCartney tiene canciones así: 'Down South', un trozo de folk casi sin trabajar, que suena más a boceto que a single. No es la cara A de ningún álbum, no tiene pretensiones de himno.\n\nThe Beatles Family la coge y la trata como lo que es —una pieza pequeña, sin artificios— y en eso está lo interesante. Hay versiones que ganan al simplificarse. Esta es una de ellas.",
+  "numeroPista": 6,
+  "tituloCancion": "The Wind Cries Mary",
+  "interpreteCover": "Acantha Lang",
+  "canalCoverUrl": "https://www.youtube.com/@AcanthaLang",
+  "artistaOriginal": "Jimi Hendrix",
+  "videoOriginalUrl": "https://www.youtube.com/watch?v=Z7K5VCCdOEM",
+  "textoCuratorial": "'The Wind Cries Mary' es la canción donde Hendrix demuestra que no necesitaba la velocidad para impresionar. Los acordes —esas transiciones de Eb a D a C a Bb— ya lo hacen todo. La canción no pide distorsión, pide que la dejen en paz.\n\nAcantha Lang la toca en Sofar London, acústica, y lo que aparece es la canción desnuda: que debajo de todo el ruido de Hendrix había un compositor que entendía la melodía mejor que casi todos sus contemporáneos.",
   "tags": [
     "acustico",
-    "pop",
-    "paul-mccartney",
+    "jimi-hendrix",
+    "live",
     "intimo"
   ]
 }

@@ -1,18 +1,18 @@
 {
-  "id": "cover-001",
-  "youtubeId": "5Z_iqr551Xs",
+  "id": "cover-002",
+  "youtubeId": "5w99gTNo_aQ",
   "fecha": "2026-06-13",
-  "numeroPista": 1,
-  "tituloCancion": "Watching the Wheels",
-  "interpreteCover": "Lukas Nelson",
-  "canalCoverUrl": "https://www.youtube.com/channel/UC4bLBnLI1EX0C6Me8ctfoxw",
-  "artistaOriginal": "John Lennon",
-  "videoOriginalUrl": "https://www.youtube.com/watch?v=uVXR2LYeFBI",
-  "textoCuratorial": "'Watching the Wheels' la escribió Lennon en 1980, en los cinco años que pasó sin grabar, cuidando a Sean en el apartamento del Dakota. Todo el mundo le preguntaba qué estaba haciendo, y la canción es su respuesta: mirar las ruedas girar, y encontrar eso suficiente.\n\nLukas Nelson la toca sin adornarla, con esa voz que lleva el country en los huesos, y consigue que suene exactamente a lo que es: una canción sobre el privilegio tranquilo de parar.",
+  "numeroPista": 2,
+  "tituloCancion": "At the Zoo",
+  "interpreteCover": "Brian Castillo",
+  "canalCoverUrl": "https://www.youtube.com/@BrianCastilloMusic",
+  "artistaOriginal": "Simon & Garfunkel",
+  "videoOriginalUrl": "https://www.youtube.com/watch?v=cDu7eitZrgw",
+  "textoCuratorial": "'At the Zoo' es la canción rara del catálogo de Simon & Garfunkel: demasiado corta, demasiado absurda, casi un sketch. Los monos tienen esperanza, los elefantes son amables pero tímidos, el director de la comisión de la cebra no tiene tiempo.\n\nBrian Castillo la toca solo, con guitarra acústica, y le sale algo que no esperabas: que la rareza de la canción sobrevive perfectamente sin la producción. Que en el fondo era esto todo el rato.",
   "tags": [
-    "john-lennon",
     "acustico",
+    "folk",
     "intimo",
-    "retiro"
+    "simon-garfunkel"
   ]
 }

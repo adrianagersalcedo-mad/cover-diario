@@ -35,13 +35,9 @@ async function loadCover(date) {
   return res.json();
 }
 
-async function getTodayCover() {
+function pastDates(list) {
   const today = new Date().toISOString().slice(0, 10);
-  const list  = await loadList();
-  const date  = list.includes(today)
-    ? today
-    : list.slice().sort().at(-1); // most recent
-  return loadCover(date);
+  return list.filter(d => d <= today).sort();
 }
 
 /* ─── RECOMMENDATION ──────────────────────────────────────────────────────── */
@@ -221,28 +217,26 @@ function renderNav(cover, list) {
 
   if (idx > 0) {
     prevEl.href = `pista?fecha=${sorted[idx - 1]}`;
-    prevEl.style.opacity = '1';
+    prevEl.classList.remove('disabled');
   } else {
-    prevEl.style.opacity = '.3';
-    prevEl.style.pointerEvents = 'none';
+    prevEl.classList.add('disabled');
   }
   if (idx < sorted.length - 1) {
     nextEl.href = `pista?fecha=${sorted[idx + 1]}`;
-    nextEl.style.opacity = '1';
+    nextEl.classList.remove('disabled');
   } else {
-    nextEl.style.opacity = '.3';
-    nextEl.style.pointerEvents = 'none';
+    nextEl.classList.add('disabled');
   }
 }
 
 async function init() {
   try {
     const list  = await loadList();
-    const today = new Date().toISOString().slice(0, 10);
-    const date  = list.includes(today) ? today : list.slice().sort().at(-1);
+    const past  = pastDates(list);
+    const date  = past.at(-1); // most recent published
     const cover = await loadCover(date);
     renderCover(cover);
-    renderNav(cover, list);
+    renderNav(cover, past);
     initShare();
   } catch (err) {
     console.error(err);

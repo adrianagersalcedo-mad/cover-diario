@@ -205,17 +205,21 @@ body::before {
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 900;
   text-decoration: none !important;
-  color: var(--day-text);
+  color: var(--papel);
+  background: var(--tinta);
   line-height: 1;
-  padding: .5rem;
-  transition: opacity .15s, transform .15s;
-  margin-bottom: .5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 2px;
+  transition: background .15s, transform .15s;
+  margin-bottom: .75rem;
+  flex-shrink: 0;
 }
-.side-nav:hover { opacity: .5; transform: scale(1.15); }
-.side-nav[style*="opacity: .3"], .side-nav[style*="opacity:.3"] { pointer-events: none; }
+.side-nav:hover { background: var(--day-hi); transform: scale(1.08); }
+.side-nav.disabled { opacity: .2; pointer-events: none; }
 
 /* VIDEO PLAYER */
 .player-wrap {

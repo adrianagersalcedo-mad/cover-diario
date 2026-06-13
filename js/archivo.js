@@ -22,7 +22,8 @@ let page = 0;
 async function loadAll() {
   const listRes = await fetch('content/covers/_list.json');
   const dates   = await listRes.json();
-  const sorted  = dates.slice().sort((a, b) => b.localeCompare(a));
+  const today   = new Date().toISOString().slice(0, 10);
+  const sorted  = dates.filter(d => d <= today).sort((a, b) => b.localeCompare(a));
   return Promise.all(
     sorted.map(d => fetch(`content/covers/${d}.json`).then(r => r.json()))
   );
