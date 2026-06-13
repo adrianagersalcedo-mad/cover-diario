@@ -1,13 +1,19 @@
 {
-  "id": "cover-004",
-  "youtubeId": "iV1gEumThbA",
+  "id": "cover-007",
+  "youtubeId": "mk9rrZi3dKE",
   "fecha": "2026-06-19",
-  "numeroPista": 4,
-  "tituloCancion": "Sister Golden Hair",
-  "interpreteCover": "The Darzis",
-  "canalCoverUrl": "https://www.youtube.com/@Thedarzis",
-  "artistaOriginal": "America",
-  "videoOriginalUrl": "https://www.youtube.com/watch?v=t_xMGsFt26o",
-  "textoCuratorial": "'Sister Golden Hair' tiene uno de esos riffs de apertura que entran directos al depósito de la nostalgia aunque no hayas nacido cuando salió. America tenía ese don: sonar a California aunque no estuvieras allí.\n\nThe Darzis la versionan sin intentar mejorarla, que es la única forma inteligente de hacer una cover así: respetar la arquitectura, encontrar dónde poner tu firma sin romper las paredes.",
-  "tags": ["acustico", "folk", "intimo", "70s"]
+  "numeroPista": 7,
+  "tituloCancion": "Lobo López",
+  "interpreteCover": "Mario Morgaño",
+  "canalCoverUrl": "https://www.youtube.com/@Mariomorganho",
+  "artistaOriginal": "Kiko Veneno",
+  "videoOriginalUrl": "https://www.youtube.com/watch?v=8xhQyvQB55E",
+  "textoCuratorial": "Kiko Veneno escribió 'Lobo López' con esa mezcla suya de flamenco y rock psicodélico que nadie más ha sabido hacer igual en el pop español. La canción tiene algo de cuento y algo de broma y algo de melancolía, todo al mismo tiempo.\n\nMario Morgaño la versiona en las Pijamming Sessions —ese formato íntimo, casi de salón— y le da un aire que baja el volumen pero no la extrañeza. Sigue sonando a Veneno aunque suene a otra cosa.",
+  "tags": [
+    "acustico",
+    "folk",
+    "kiko-veneno",
+    "español",
+    "intimo"
+  ]
 }

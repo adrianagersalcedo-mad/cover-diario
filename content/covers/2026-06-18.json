@@ -1,13 +1,18 @@
 {
-  "id": "cover-003",
-  "youtubeId": "vyRNZoBPGQE",
+  "id": "cover-006",
+  "youtubeId": "EkS4ukSdfnM",
   "fecha": "2026-06-18",
-  "numeroPista": 3,
-  "tituloCancion": "Tumbling Dice",
-  "interpreteCover": "Shields Brothers",
-  "canalCoverUrl": "https://www.youtube.com/@Shieldsbrothers",
-  "artistaOriginal": "The Rolling Stones",
-  "videoOriginalUrl": "https://www.youtube.com/watch?v=sa8Eqw6kJ9A",
-  "textoCuratorial": "'Tumbling Dice' es quizás el riff más resbaladizo de Keith Richards —y eso ya es decir mucho. El original del Exile on Main St. suena como grabado en un sótano a las cuatro de la mañana, todo loosey-goosey, con la batería empujando desde atrás.\n\nLos Shields Brothers la hacen acústica, a dos voces, y pasa una cosa curiosa: el riff aguanta. Se queda solo, sin el circo alrededor, y sigue siendo irresistible.",
-  "tags": ["acustico", "rock", "rolling-stones", "folk"]
+  "numeroPista": 6,
+  "tituloCancion": "The Wind Cries Mary",
+  "interpreteCover": "Acantha Lang",
+  "canalCoverUrl": "https://www.youtube.com/@AcanthaLang",
+  "artistaOriginal": "Jimi Hendrix",
+  "videoOriginalUrl": "https://www.youtube.com/watch?v=M3DKp0F3aTE",
+  "textoCuratorial": "'The Wind Cries Mary' es la canción donde Hendrix demuestra que no necesitaba la velocidad para impresionar. Los acordes —esas transiciones de Eb a D a C a Bb— ya lo hacen todo. La canción no pide distorsión, pide que la dejen en paz.\n\nAcantha Lang la toca en Sofar London, acústica, y lo que aparece es la canción desnuda: que debajo de todo el ruido de Hendrix había un compositor que entendía la melodía mejor que casi todos sus contemporáneos.",
+  "tags": [
+    "acustico",
+    "jimi-hendrix",
+    "live",
+    "intimo"
+  ]
 }
