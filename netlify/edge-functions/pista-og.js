@@ -46,8 +46,8 @@ export default async (request, context) => {
     rawDesc.length > 155 ? rawDesc.slice(0, 154) + '…' : rawDesc ||
     `Pista ${cover.numeroPista}: "${cover.tituloCancion}" — cover de ${cover.interpreteCover}`
   );
-  // YouTube sirve JPEG de alta resolución — funciona en todas las plataformas
-  const image  = `https://img.youtube.com/vi/${cover.youtubeId}/maxresdefault.jpg`;
+  // Tarjeta generada (1080×1080 PNG) — usada también para descarga Instagram
+  const image  = `https://refrito.org/og-image/${fecha}.png`;
   const pageUrl = escapeAttr(`https://refrito.org/pista.html?fecha=${fecha}`);
 
   const ogTags = `
@@ -59,8 +59,8 @@ export default async (request, context) => {
   <meta property="og:title"        content="${title}">
   <meta property="og:description"  content="${desc}">
   <meta property="og:image"        content="${image}">
-  <meta property="og:image:width"  content="1280">
-  <meta property="og:image:height" content="720">
+  <meta property="og:image:width"  content="1080">
+  <meta property="og:image:height" content="1080">
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:title"       content="${title}">
   <meta name="twitter:description" content="${desc}">

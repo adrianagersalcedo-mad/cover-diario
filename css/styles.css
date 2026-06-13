@@ -372,6 +372,23 @@ body::before {
 }
 .share-notice.show { opacity: 1; }
 
+.btn-download {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border: 2px solid var(--bermellón);
+  padding: .35em .9em;
+  background: transparent;
+  color: var(--bermellón);
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.btn-download:hover {
+  background: var(--bermellón);
+  color: var(--day-bg);
+}
+
 /* ─── FOOTER ──────────────────────────────────────────────────────────────── */
 .site-footer {
   border-top: 2px solid var(--tinta);
