@@ -58,7 +58,10 @@ function syncApproved() {
     // No sobreescribir un cover ya publicado
     if (fs.existsSync(coverPath)) continue;
 
-    // Copia sin el campo estado
+    // Genera id si no existe, luego copia sin el campo estado
+    if (!proposal.id) {
+      proposal.id = `cover-${proposal.numeroPista}`;
+    }
     const { estado, ...cover } = proposal;
     writeJSON(coverPath, cover);
     console.log(`  ✓ ${file} → covers/${proposal.fecha}.json`);
@@ -85,7 +88,7 @@ function buildList() {
 
 // ─── main ──────────────────────────────────────────────────────────────────────
 
-console.log('\nCoverDiario build\n─────────────────');
+console.log('\nRefrito build\n─────────────');
 console.log('Sincronizando propuestas aprobadas…');
 syncApproved();
 console.log('Generando _list.json…');

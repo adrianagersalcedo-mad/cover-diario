@@ -163,3 +163,15 @@ collections:
         min: 1
         required: false
         hint: "Obligatorio antes de aprobar"
+
+      - label: "Miniatura (URL)"
+        name: miniatura
+        widget: string
+        required: false
+        hint: "URL de la miniatura de YouTube (autocompletado por el robot)"
+
+      - label: "Título original del vídeo"
+        name: _videoTitulo
+        widget: string
+        required: false
+        hint: "Título original tal como aparece en YouTube (rellenado por el robot)"
