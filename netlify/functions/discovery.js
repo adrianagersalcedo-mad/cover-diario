@@ -230,7 +230,15 @@ async function writeProposal(video, sourceQuery) {
 
   const proposal = buildProposal(video, sourceQuery);
   const encoded  = Buffer.from(JSON.stringify(proposal, null, 2) + '\n').toString('base64');
-  await ghPut(path, encoded, `discovery: nueva propuesta ${video.id}`);
+  try {
+    await ghPut(path, encoded, `discovery: nueva propuesta ${video.id}`);
+  } catch (e) {
+    if (e.message.includes('409')) {
+      console.log(`  · ${video.id} conflicto (ya existe en otra ejecución) — omitido`);
+      return false;
+    }
+    throw e;
+  }
   console.log(`  ✓ ${video.id}  "${(video.snippet?.title || '').slice(0, 60)}"`);
   return true;
 }
