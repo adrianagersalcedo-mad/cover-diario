@@ -11,6 +11,10 @@
 [functions."discovery-background"]
   schedule = "0 3 * * *"
 
+[[edge_functions]]
+  path     = "/pista.html"
+  function = "pista-og"
+
 [[redirects]]
   from   = "/admin"
   to     = "/admin/index.html"
