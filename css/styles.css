@@ -200,6 +200,22 @@ body::before {
   transition: opacity .15s;
 }
 .meta-col a:hover { opacity: .6; }
+.side-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  color: var(--day-text);
+  line-height: 1;
+  padding: .5rem;
+  transition: opacity .15s, transform .15s;
+  margin-bottom: .5rem;
+}
+.side-nav:hover { opacity: .5; transform: scale(1.15); }
+.side-nav[style*="opacity: .3"], .side-nav[style*="opacity:.3"] { pointer-events: none; }
 
 /* VIDEO PLAYER */
 .player-wrap {

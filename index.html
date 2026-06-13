@@ -53,17 +53,11 @@
       <span class="piece">HOY SUENA</span>
     </div>
 
-    <!-- NAV ENTRE PISTAS -->
-    <nav class="track-nav" aria-label="Navegar entre pistas">
-      <a id="nav-prev" href="#" class="eyebrow-box" style="text-decoration:none">← Anterior</a>
-      <a href="archivo.html" class="eyebrow-box" style="text-decoration:none">ARCHIVO</a>
-      <a id="nav-next" href="#" class="eyebrow-box" style="text-decoration:none">Siguiente →</a>
-    </nav>
-
     <!-- MEDIA + COLUMNS -->
     <div class="media-section">
-      <!-- LEFT META -->
+      <!-- LEFT META + PREV -->
       <div class="meta-col">
+        <a id="nav-prev" href="#" class="side-nav" aria-label="Pista anterior">←</a>
         <div>
           <p class="meta-label">Intérprete</p>
           <p class="meta-val" id="meta-interprete">—</p>
@@ -87,8 +81,9 @@
         </iframe>
       </div>
 
-      <!-- RIGHT META -->
+      <!-- RIGHT META + NEXT -->
       <div class="meta-col" style="text-align:right;align-items:flex-end">
+        <a id="nav-next" href="#" class="side-nav" aria-label="Pista siguiente">→</a>
         <div>
           <p class="out-now">ESCÚCHALA EN ↗</p>
           <a id="link-yt"       href="#" target="_blank" rel="noopener noreferrer">Ver en YouTube ↗</a>
