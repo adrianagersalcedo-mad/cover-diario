@@ -126,11 +126,12 @@ function filterVideo(v) {
   const views   = parseInt(v.statistics?.viewCount   || '0', 10);
   const subs    = parseInt(v.statistics?.subscriberCount || '0', 10);
 
-  if (v.status?.embeddable === false)                                   return false;
-  if (dur < CONFIG.minDurationSeconds)                                  return false;
-  if (CONFIG.titleBlacklist.some(kw => title.includes(kw.toLowerCase()))) return false;
+  if (v.status?.embeddable === false)                                         return false;
+  if (dur < CONFIG.minDurationSeconds)                                        return false;
+  if (CONFIG.titleBlacklist.some(kw => title.includes(kw.toLowerCase())))    return false;
   if (CONFIG.channelBlacklist.some(kw => channel.includes(kw.toLowerCase()))) return false;
-  if (CONFIG.maxViewCount        != null && views > CONFIG.maxViewCount)       return false;
+  if (CONFIG.minViewCount        != null && views < CONFIG.minViewCount)      return false;
+  if (CONFIG.maxViewCount        != null && views > CONFIG.maxViewCount)      return false;
   if (CONFIG.maxSubscriberCount  != null && subs  > CONFIG.maxSubscriberCount) return false;
 
   return true;
@@ -141,21 +142,29 @@ function filterVideo(v) {
 // y cierta antigüedad (no demasiado virales por ser recientes).
 
 function scoreVideo(v) {
-  const views     = parseInt(v.statistics?.viewCount || '0', 10);
+  const views    = parseInt(v.statistics?.viewCount    || '0', 10);
+  const likes    = parseInt(v.statistics?.likeCount    || '0', 10);
+  const comments = parseInt(v.statistics?.commentCount || '0', 10);
   const published = new Date(v.snippet?.publishedAt || 0).getTime();
-  const ageMs     = Date.now() - published;
-  const ageDays   = ageMs / (1000 * 3600 * 24);
+  const ageDays   = (Date.now() - published) / (1000 * 3600 * 24);
 
-  // Vistas normalizadas en log (0–1 respecto al máximo configurado)
-  const maxV     = CONFIG.maxViewCount || 5000000;
-  const viewScore = views > 50 ? Math.min(1, Math.log10(views) / Math.log10(maxV)) : 0;
+  // Vistas normalizadas en log (0–1). Sweet spot: 1K–100K vistas.
+  const maxV      = CONFIG.maxViewCount || 1000000;
+  const viewScore = views > 100 ? Math.min(1, Math.log10(views) / Math.log10(maxV)) : 0;
 
-  // Penaliza vídeos muy recientes (<7 días) y muy antiguos (>3 años)
-  const freshnessScore = ageDays < 7   ? 0.3
-                       : ageDays > 1095 ? 0.4
-                       : 0.8;
+  // Ratio likes/vistas: señal de calidad y aprecio de la audiencia
+  const likeRatio  = views > 0 ? likes / views : 0;
+  const engageScore = Math.min(1, likeRatio / 0.05); // 5% de likes = puntuación máxima
 
-  return viewScore * 0.6 + freshnessScore * 0.4;
+  // Actividad: vídeos comentados sugieren que la gente conectó
+  const commentScore = comments > 5 ? Math.min(1, Math.log10(comments) / 2) : 0;
+
+  // Penaliza extremos temporales
+  const freshnessScore = ageDays < 3    ? 0.2   // demasiado nuevo, sin tracción aún
+                       : ageDays > 1460  ? 0.5   // más de 4 años
+                       : 1.0;
+
+  return viewScore * 0.35 + engageScore * 0.35 + commentScore * 0.15 + freshnessScore * 0.15;
 }
 
 // ─── PARSEO HEURÍSTICO DEL TÍTULO ─────────────────────────────────────────────
@@ -330,9 +339,17 @@ exports.handler = async function () {
     const filtered = enriched.filter(filterVideo);
     console.log(`Tras filtro: ${filtered.length}`);
 
+    // Ordena por score y aplica límite de vídeos por canal
+    const maxPerCh = CONFIG.maxVideosPerChannel || 1;
+    const channelCount = {};
     const top = filtered
       .map(v => ({ v, score: scoreVideo(v) }))
       .sort((a, b) => b.score - a.score)
+      .filter(({ v }) => {
+        const chId = v.snippet?.channelId || 'unknown';
+        channelCount[chId] = (channelCount[chId] || 0) + 1;
+        return channelCount[chId] <= maxPerCh;
+      })
       .slice(0, CONFIG.topN)
       .map(x => x.v);
     console.log(`Top ${top.length} seleccionados`);

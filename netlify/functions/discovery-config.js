@@ -9,33 +9,40 @@ module.exports = {
   // Rotan por tanda (una tanda = queriesPerRun consultas al día).
   // Añade, quita o edita las que quieras. Mezcla géneros e idiomas.
   queries: [
-    // Inglés — rock, pop, folk, indie
-    'rock cover bedroom',
-    'rock cover acoustic',
-    'pop cover acoustic bedroom',
-    'indie cover homemade',
-    'folk cover original',
-    'singer songwriter cover acoustic',
-    'classic rock cover amateur',
-    'pop cover one take',
-    'acoustic cover living room',
-    'indie folk cover bedroom guitar',
-    'alternative rock cover homemade',
-    'pop punk cover bedroom recording',
-    'cover session acoustic guitar singer',
-    'rock cover phone camera',
+    // ── Inglés: canciones concretas muy versionadas ────────────────────────────
+    // Buscar por canción real da resultados mucho más limpios que términos genéricos
+    '"Creep" cover acoustic guitar',
+    '"Wonderwall" cover bedroom acoustic',
+    '"Blackbird" Beatles cover acoustic',
+    '"Fast Car" Tracy Chapman cover acoustic',
+    '"Hallelujah" cover singer songwriter',
+    '"The Night We Met" cover acoustic',
+    '"Moon River" cover acoustic guitar',
+    '"No One" Alicia Keys cover acoustic',
+    '"Free Fallin" cover bedroom guitar',
+    '"Landslide" Fleetwood Mac cover acoustic',
+    '"Sound of Silence" cover acoustic',
+    '"Wish You Were Here" cover acoustic bedroom',
+    '"Hotel California" cover acoustic guitar',
+    '"Africa" Toto cover acoustic',
+    '"Roxanne" cover acoustic guitar',
 
-    // Español — rock, pop, folk, indie
-    'cover acústico rock',
-    'versión acústica pop',
-    'cover folk cantautor',
-    'cover casero guitarra',
-    'cover indie amateur',
-    'versión acústica indie',
-    'cover rock español amateur',
-    'cover pop acústico',
-    'cover acústico guitarra voz',
-    'versión propia canción rock',
+    // ── Español: canciones y artistas muy versionados ─────────────────────────
+    '"La Flaca" cover acústico',
+    '"Peces de ciudad" cover acústico',
+    '"No me llames dolores" cover acústico',
+    '"Resistiré" cover acústico guitarra',
+    '"Bésame" Vargas Blues Band cover',
+    'Vetusta Morla cover acústico',
+    'Extremoduro cover acústico guitarra',
+    'Rosendo cover acústico',
+    'Loquillo cover acústico',
+    'Heroes del Silencio cover acústico',
+    'Joaquín Sabina cover acústico guitarra',
+    'Manolo García cover acústico',
+    'Fito Páez cover acústico',
+    'Andrés Calamaro cover acústico',
+    'Los Planetas cover acústico',
   ],
 
   // Cuántas consultas ejecutar por tanda (rota cada día).
@@ -53,11 +60,15 @@ module.exports = {
   // Rango amateur flexible.
   // null = sin límite (desactiva ese filtro).
   // El rango es generoso: acepta desde lo muy casero hasta amateurs cuidados.
-  maxViewCount: 5000000,       // 5M vistas: cubre amateurs que tuvieron un viral
-  maxSubscriberCount: 500000,  // 500K subs: generoso para amateurs con trayectoria
+  minViewCount: 150,           // descarta vídeos sin ninguna tracción (spam/basura)
+  maxViewCount: 1000000,       // 1M vistas: amateurs que tuvieron un viral moderado
+  maxSubscriberCount: 150000,  // 150K subs: amateur con cierta trayectoria, no profesional
 
   // Cuántas propuestas escribir por tanda (las mejor puntuadas)
   topN: 10,
+
+  // Máximo de vídeos del mismo canal por tanda (evita repetir al mismo youtuber)
+  maxVideosPerChannel: 1,
 
   // Palabras en el TÍTULO que descartan automáticamente (case-insensitive, substring)
   titleBlacklist: [
@@ -68,9 +79,14 @@ module.exports = {
     'remix', 'mashup',
     'official video', 'official music video', 'music video',
     'vevo',
-    'live at madison', 'live at wembley', 'live concert',  // conciertos de profesionales
-    '#shorts',
+    'live at madison', 'live at wembley', 'live concert',
+    '#shorts', 'short', ' shorts',
     'full album',
+    'compilation', 'compilación', 'best of',
+    'medley',
+    'piano cover',       // queremos guitarra/voz principalmente
+    'metal cover',       // demasiado alejado del spirit del proyecto
+    'orchestra',
   ],
 
   // Palabras en el NOMBRE DEL CANAL que descartan automáticamente
