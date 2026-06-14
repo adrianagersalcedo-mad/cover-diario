@@ -124,32 +124,24 @@ function renderCover(c, list) {
   applyPalette(paletteForDate(c.fecha));
   const today = new Date().toISOString().slice(0, 10);
 
-  // Mono bar
-  setText('meta-num',      `PISTA Nº ${c.numeroPista}`);
-  setText('meta-date',     fmtDate(c.fecha));
-  setText('meta-hoy-label', c.fecha === today ? 'HOY SUENA' : c.fecha);
+  // Date badge
+  setText('meta-num',  `Pista ${c.numeroPista}`);
+  setText('meta-date', fmtDate(c.fecha));
 
   // Video
   const iframe = document.getElementById('yt-iframe');
   iframe.src   = `https://www.youtube-nocookie.com/embed/${c.youtubeId}?rel=0&modestbranding=1`;
   iframe.title = `${c.tituloCancion} — ${c.interpreteCover} (cover)`;
 
-  // Left meta
-  setText('meta-interprete', c.interpreteCover);
-  setText('meta-fecha-col',  fmtDate(c.fecha));
-
-  // Right meta links
-  setLink('link-yt',       `https://www.youtube.com/watch?v=${c.youtubeId}`,   'Ver en YouTube ↗');
-  setLink('link-canal',    c.canalCoverUrl,                                     'Canal del intérprete ↗');
-  setLink('link-original', c.videoOriginalUrl,                                  'Ver original ↗');
-
   // Firma
   setText('cover-name',      c.interpreteCover.toUpperCase());
   setText('original-script', `↺ versiona a ${c.artistaOriginal} · "${c.tituloCancion}"`);
 
-  // Stripe
-  setText('stripe-title',    `"${c.tituloCancion}"`);
-  setText('stripe-original', c.artistaOriginal);
+  // Artist chip
+  setText('artist-avatar', (c.interpreteCover || '?').trim().charAt(0).toUpperCase());
+  setText('artist-name',   c.interpreteCover);
+  const chan = document.getElementById('artist-channel');
+  if (chan) chan.href = c.canalCoverUrl;
 
   // Curatorial
   document.getElementById('curatorial-text').innerHTML = c.textoCuratorial
@@ -214,6 +206,26 @@ function initShare() {
   });
 }
 
+/* ─── LIKE / FAVORITO ─────────────────────────────────────────────────────── */
+/* Favorito local (localStorage). Para el contador real compartido (opción b)
+   registrar el like en un backend en el punto marcado con TODO. */
+function initLike(fecha) {
+  const btn = document.getElementById('btn-like');
+  if (!btn) return;
+  const key = `refrito-like-${fecha}`;
+  if (localStorage.getItem(key)) {
+    btn.classList.add('liked');
+    btn.setAttribute('aria-pressed', 'true');
+  }
+  btn.addEventListener('click', () => {
+    const liked = btn.classList.toggle('liked');
+    btn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+    if (liked) localStorage.setItem(key, '1');
+    else       localStorage.removeItem(key);
+    // TODO (opción b): registrar/retirar el like en el backend compartido aquí
+  });
+}
+
 /* ─── INIT ────────────────────────────────────────────────────────────────── */
 async function init() {
   const params = new URLSearchParams(window.location.search);
@@ -229,6 +241,7 @@ async function init() {
     const [cover, list] = await Promise.all([loadCover(fecha), loadList()]);
     renderCover(cover, list);
     initShare();
+    initLike(cover.fecha);
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =

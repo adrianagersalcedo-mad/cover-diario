@@ -125,8 +125,8 @@ function renderCover(c) {
   // Palette
   applyPalette(paletteForDate(c.fecha));
 
-  // Mono bar
-  setText('meta-num',  `PISTA Nº ${c.numeroPista}`);
+  // Date badge
+  setText('meta-num',  `Pista ${c.numeroPista}`);
   setText('meta-date', fmtDate(c.fecha));
 
   // Video
@@ -134,22 +134,15 @@ function renderCover(c) {
   iframe.src   = `https://www.youtube-nocookie.com/embed/${c.youtubeId}?rel=0&modestbranding=1`;
   iframe.title = `${c.tituloCancion} — ${c.interpreteCover} (cover)`;
 
-  // Left meta
-  setText('meta-interprete', c.interpreteCover);
-  setText('meta-fecha-col',  fmtDate(c.fecha));
-
-  // Right meta links
-  setLink('link-yt',       `https://www.youtube.com/watch?v=${c.youtubeId}`,   'Ver en YouTube ↗');
-  setLink('link-canal',    c.canalCoverUrl,                                     'Canal del intérprete ↗');
-  setLink('link-original', c.videoOriginalUrl,                                  'Ver original ↗');
-
   // Firma visual
   setText('cover-name',     c.interpreteCover.toUpperCase());
   setText('original-script',`↺ versiona a ${c.artistaOriginal} · "${c.tituloCancion}"`);
 
-  // Song stripe
-  setText('stripe-title',   `"${c.tituloCancion}"`);
-  setText('stripe-original', c.artistaOriginal);
+  // Artist chip
+  setText('artist-avatar', (c.interpreteCover || '?').trim().charAt(0).toUpperCase());
+  setText('artist-name',   c.interpreteCover);
+  const chan = document.getElementById('artist-channel');
+  if (chan) chan.href = c.canalCoverUrl;
 
   // Curatorial
   const el = document.getElementById('curatorial-text');
@@ -207,6 +200,27 @@ function initShare() {
   });
 }
 
+/* ─── LIKE / FAVORITO ─────────────────────────────────────────────────────── */
+/* De momento es un favorito local (localStorage del visitante).
+   Para el contador real compartido (opción b) hay que registrar el like
+   en un backend en el punto marcado con TODO. */
+function initLike(fecha) {
+  const btn = document.getElementById('btn-like');
+  if (!btn) return;
+  const key = `refrito-like-${fecha}`;
+  if (localStorage.getItem(key)) {
+    btn.classList.add('liked');
+    btn.setAttribute('aria-pressed', 'true');
+  }
+  btn.addEventListener('click', () => {
+    const liked = btn.classList.toggle('liked');
+    btn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+    if (liked) localStorage.setItem(key, '1');
+    else       localStorage.removeItem(key);
+    // TODO (opción b): registrar/retirar el like en el backend compartido aquí
+  });
+}
+
 /* ─── INIT ────────────────────────────────────────────────────────────────── */
 function renderNav(cover, list) {
   const sorted  = list.slice().sort();
@@ -238,6 +252,7 @@ async function init() {
     renderCover(cover);
     renderNav(cover, past);
     initShare();
+    initLike(cover.fecha);
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =

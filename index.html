@@ -32,65 +32,42 @@
   <header class="site-header">
     <a href="index.html" class="wordmark" aria-label="Refrito — inicio">
       <img src="logo.svg" alt="" aria-hidden="true" width="42" height="27" style="display:inline-block;vertical-align:middle;margin-right:.5rem;color:var(--tinta)">REFRITO
-      <small>Tu mixtape de confianza</small>
     </a>
     <div class="header-right">
-      <span class="eyebrow-box active">HOY</span>
-      <a href="archivo.html" class="eyebrow-box" style="text-decoration:none">ARCHIVO</a>
-      <a href="acerca.html"  class="eyebrow-box" style="text-decoration:none">ACERCA DE</a>
+      <span class="eyebrow-box active">Hoy</span>
+      <a href="archivo.html" class="eyebrow-box" style="text-decoration:none">Archivo</a>
+      <a href="acerca.html"  class="eyebrow-box" style="text-decoration:none">Acerca de</a>
     </div>
   </header>
 
   <!-- MAIN -->
   <main id="main-content">
 
-    <!-- MONO BAR -->
-    <div class="mono-bar" aria-label="Metadatos de pista">
-      <span class="piece" id="meta-num">PISTA Nº —</span>
-      <span class="piece sep">·</span>
-      <span class="piece" id="meta-date">—</span>
-      <span class="piece sep">·</span>
-      <span class="piece">HOY SUENA</span>
+    <!-- HERO: vídeo protagonista -->
+    <div class="hero" role="region" aria-label="Reproductor de vídeo">
+      <iframe
+        id="yt-iframe"
+        src="about:blank"
+        allowfullscreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+        title="Cargando…"
+        loading="lazy">
+      </iframe>
     </div>
 
-    <!-- MEDIA + COLUMNS -->
-    <div class="media-section">
-      <!-- LEFT META + PREV -->
-      <div class="meta-col">
-        <a id="nav-prev" href="#" class="side-nav" aria-label="Pista anterior">←</a>
-        <div>
-          <p class="meta-label">Intérprete</p>
-          <p class="meta-val" id="meta-interprete">—</p>
-        </div>
-        <div>
-          <p class="meta-label">Fecha</p>
-          <p class="meta-val" id="meta-fecha-col">—</p>
-        </div>
-      </div>
-
-      <!-- PLAYER -->
-      <div class="player-wrap" role="region" aria-label="Reproductor de vídeo">
-        <iframe
-          id="yt-iframe"
-          src="about:blank"
-          allowfullscreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          referrerpolicy="strict-origin-when-cross-origin"
-          title="Cargando…"
-          loading="lazy">
-        </iframe>
-      </div>
-
-      <!-- RIGHT META + NEXT -->
-      <div class="meta-col" style="text-align:right;align-items:flex-end">
-        <a id="nav-next" href="#" class="side-nav" aria-label="Pista siguiente">→</a>
-        <div>
-          <p class="out-now">ESCÚCHALA EN ↗</p>
-          <a id="link-yt"       href="#" target="_blank" rel="noopener noreferrer">Ver en YouTube ↗</a>
-          <a id="link-canal"    href="#" target="_blank" rel="noopener noreferrer">Canal del intérprete ↗</a>
-          <a id="link-original" href="#" target="_blank" rel="noopener noreferrer">Ver original ↗</a>
-        </div>
-      </div>
+    <!-- MEDIA BAR: navegación + fecha + acciones -->
+    <div class="media-bar">
+      <a id="nav-prev" href="#" class="navarrow" aria-label="Pista anterior">←</a>
+      <a id="nav-next" href="#" class="navarrow" aria-label="Pista siguiente">→</a>
+      <span class="date-badge"><span class="num" id="meta-num">Pista —</span> · <span id="meta-date">—</span></span>
+      <span class="spacer"></span>
+      <button class="fab" id="btn-like" type="button" aria-label="Me gusta" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12.57l-7.5 7.43l-7.5 -7.43a5 5 0 1 1 7.5 -6.57a5 5 0 1 1 7.5 6.57z"/></svg>
+      </button>
+      <button class="fab" id="btn-share" type="button" aria-label="Compartir" data-title="">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg>
+      </button>
     </div>
 
     <!-- FIRMA VISUAL -->
@@ -99,12 +76,14 @@
       <span class="original-script" id="original-script" aria-label="versiona a"></span>
     </section>
 
-    <!-- SONG STRIPE -->
-    <div class="song-stripe" aria-hidden="true">
-      <span class="meta-label" style="opacity:.55;letter-spacing:.2em">VERSIONA</span>
-      <span class="song-title-val" id="stripe-title">—</span>
-      <span style="opacity:.4">·</span>
-      <span id="stripe-original">—</span>
+    <!-- ARTIST CHIP -->
+    <div class="artist-chip">
+      <div class="avatar" id="artist-avatar" aria-hidden="true">—</div>
+      <div class="who">
+        <p class="role">Intérprete</p>
+        <p class="name" id="artist-name">—</p>
+      </div>
+      <a class="channel" id="artist-channel" href="#" target="_blank" rel="noopener noreferrer">Canal ↗</a>
     </div>
 
     <!-- CURATORIAL -->
@@ -127,16 +106,10 @@
       <div class="cred-row">
         <span class="cred-key">Vídeo</span>
         <a class="cred-link" id="cred-yt-link" href="#" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
-        <span style="opacity:.35">· Reproductor oficial de inserción</span>
       </div>
     </section>
 
-    <!-- SHARE -->
-    <div class="share-row">
-      <span class="share-label">Compartir pista</span>
-      <button class="btn-share" id="btn-share" type="button" data-title="">Compartir ↗</button>
-      <span class="share-notice" id="share-notice" aria-live="polite">Enlace copiado</span>
-    </div>
+    <span class="share-notice" id="share-notice" aria-live="polite">Enlace copiado</span>
 
     <!-- NEWSLETTER -->
     <section class="newsletter-block" aria-label="Suscripción al boletín">
