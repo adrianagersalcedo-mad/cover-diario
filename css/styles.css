@@ -762,6 +762,109 @@ body::before {
 .newsletter-status[data-state="error"]   { color: var(--day-hi); }
 .newsletter-status[data-state="sending"] { color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg)); }
 
+/* ─── FEEDBACK (¿qué te parece refrito.org?) ──────────────────────────────── */
+.feedback-block {
+  border-top: 2px solid var(--tinta);
+  padding-block: 1.75rem 2rem;
+}
+.feedback-heading {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--day-text);
+  margin-bottom: .5rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.feedback-heading::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 4px;
+  background: var(--day-hi);
+  flex-shrink: 0;
+}
+.feedback-sub {
+  font-family: var(--font-body);
+  font-size: .9375rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--day-text) 72%, var(--day-bg));
+  margin-bottom: 1.1rem;
+  max-width: 48ch;
+}
+.feedback-text {
+  width: 100%;
+  padding: .65rem .75rem;
+  font-family: var(--font-body);
+  font-size: .95rem;
+  line-height: 1.5;
+  background: transparent;
+  color: var(--day-text);
+  border: 2px solid color-mix(in srgb, var(--day-text) 40%, var(--day-bg));
+  border-radius: 0;
+  resize: vertical;
+  min-height: 88px;
+  transition: border-color .15s;
+}
+.feedback-text::placeholder { color: color-mix(in srgb, var(--day-text) 32%, var(--day-bg)); }
+.feedback-text:focus { border-color: var(--day-text); outline: none; }
+.feedback-text:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+.feedback-row {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin-top: .5rem;
+}
+.feedback-email {
+  flex: 1 1 220px;
+  min-height: 44px;
+  padding: 0 .75rem;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  background: transparent;
+  color: var(--day-text);
+  border: 2px solid color-mix(in srgb, var(--day-text) 40%, var(--day-bg));
+  border-radius: 0;
+  outline: none;
+  transition: border-color .15s;
+}
+.feedback-email::placeholder { color: color-mix(in srgb, var(--day-text) 32%, var(--day-bg)); }
+.feedback-email:focus { border-color: var(--day-text); }
+.feedback-btn {
+  min-height: 44px;
+  padding: 0 1.1rem;
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: var(--tinta);
+  color: var(--papel);
+  border: 2px solid var(--tinta);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.feedback-btn:hover { background: var(--day-hi); border-color: var(--day-hi); }
+.feedback-btn:disabled { opacity: .45; cursor: default; }
+.feedback-status {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  min-height: 1.4em;
+  margin-top: .5rem;
+  color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg));
+}
+.feedback-status[data-state="ok"]      { color: var(--day-text); font-weight: 700; }
+.feedback-status[data-state="error"]   { color: var(--day-hi); }
+.feedback-status[data-state="sending"] { color: color-mix(in srgb, var(--day-text) 55%, var(--day-bg)); }
+
 /* ─── ABOUT / LEGAL PAGE ──────────────────────────────────────────────────── */
 .text-page {
   max-width: 64ch;
