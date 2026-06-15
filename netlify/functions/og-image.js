@@ -130,6 +130,44 @@ function buildSvg(cover) {
 </svg>`;
 }
 
+// ─── TARJETA DE MARCA POR DEFECTO (sin fecha) ─────────────────────────────────
+// Se usa como og:image de la home y como fallback general.
+
+function buildDefaultSvg() {
+  const papel = '#EFEAD9', tinta = '#16110D', frame = '#EF5226';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <rect width="1080" height="1080" fill="${papel}"/>
+  <rect x="0" y="0" width="1080" height="1080" fill="none" stroke="${frame}" stroke-width="28"/>
+
+  <!-- Logo: sartén + vinilo (de logo.svg, escalado y centrado) -->
+  <g transform="translate(232,210) scale(8)">
+    <path d="M38 14 L68 4 Q72 2.5 72.5 6 Q73 9 69 10.5 L40 19 Z" fill="${tinta}"/>
+    <circle cx="70" cy="7.2" r="1.6" fill="${frame}"/>
+    <circle cx="22" cy="22" r="21" fill="${frame}"/>
+    <circle cx="22" cy="22" r="17.5" fill="${tinta}"/>
+    <circle cx="22" cy="22" r="14.8" stroke="${frame}" stroke-width="1.3" fill="none"/>
+    <circle cx="22" cy="22" r="12.2" stroke="${frame}" stroke-width="1.1" fill="none"/>
+    <circle cx="22" cy="22" r="9.8"  stroke="${frame}" stroke-width="1.0" fill="none"/>
+    <circle cx="22" cy="22" r="7.5"  stroke="${frame}" stroke-width="0.9" fill="none"/>
+    <circle cx="22" cy="22" r="5.4"  stroke="${frame}" stroke-width="0.85" fill="none"/>
+    <circle cx="22" cy="22" r="3"    fill="${frame}"/>
+    <circle cx="22" cy="22" r="1"    fill="${tinta}"/>
+  </g>
+
+  <text x="540" y="730" text-anchor="middle"
+    font-family="Liberation Sans, DejaVu Sans, Arial, Helvetica, sans-serif"
+    font-weight="700" font-size="150" fill="${tinta}" letter-spacing="6">REFRITO</text>
+
+  <text x="540" y="810" text-anchor="middle"
+    font-family="Liberation Sans, DejaVu Sans, Arial, Helvetica, sans-serif"
+    font-size="44" fill="${tinta}" opacity="0.6">Un cover al día</text>
+
+  <text x="540" y="980" text-anchor="middle"
+    font-family="Liberation Sans, DejaVu Sans, Arial, Helvetica, sans-serif"
+    font-size="34" fill="${frame}" font-weight="700">refrito.org</text>
+</svg>`;
+}
+
 // ─── HANDLER ──────────────────────────────────────────────────────────────────
 
 exports.handler = async (event) => {
@@ -137,24 +175,25 @@ exports.handler = async (event) => {
   const fecha    = (params.fecha || '').trim();
   const download = params.download === '1';
 
+  // Sin fecha (o inválida) → tarjeta de marca por defecto (og:image de la home).
+  let svg, filename;
   if (!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
-    return { statusCode: 400, body: 'Parámetro requerido: ?fecha=YYYY-MM-DD' };
+    svg = buildDefaultSvg();
+    filename = 'refrito';
+  } else {
+    const coverPath = path.join(__dirname, '../../content/covers', `${fecha}.json`);
+    if (!fs.existsSync(coverPath)) {
+      return { statusCode: 404, body: `Sin cover para ${fecha}` };
+    }
+    let cover;
+    try {
+      cover = JSON.parse(fs.readFileSync(coverPath, 'utf-8'));
+    } catch {
+      return { statusCode: 500, body: 'Error leyendo el cover' };
+    }
+    svg = buildSvg(cover);
+    filename = `refrito-${fecha}`;
   }
-
-  const coverPath = path.join(__dirname, '../../content/covers', `${fecha}.json`);
-
-  if (!fs.existsSync(coverPath)) {
-    return { statusCode: 404, body: `Sin cover para ${fecha}` };
-  }
-
-  let cover;
-  try {
-    cover = JSON.parse(fs.readFileSync(coverPath, 'utf-8'));
-  } catch {
-    return { statusCode: 500, body: 'Error leyendo el cover' };
-  }
-
-  const svg = buildSvg(cover);
 
   let pngBuffer;
   try {
@@ -169,8 +208,8 @@ exports.handler = async (event) => {
   }
 
   const disposition = download
-    ? `attachment; filename="refrito-${fecha}.png"`
-    : `inline; filename="refrito-${fecha}.png"`;
+    ? `attachment; filename="${filename}.png"`
+    : `inline; filename="${filename}.png"`;
 
   return {
     statusCode: 200,

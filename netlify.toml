@@ -40,6 +40,12 @@
   to     = "/.netlify/functions/og-image?fecha=:fecha"
   status = 200
 
+# Tarjeta de marca por defecto (og:image de la home y fallback)
+[[redirects]]
+  from   = "/og-default.png"
+  to     = "/.netlify/functions/og-image"
+  status = 200
+
 [[redirects]]
   from   = "/admin"
   to     = "/admin/index.html"
