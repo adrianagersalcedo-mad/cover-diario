@@ -73,8 +73,9 @@ module.exports = {
   maxVideosPerChannel: 1,
 
   // Cuántos candidatos enviar a Gemini para evaluación profunda
-  // (los mejor puntuados por el scoring numérico previo)
-  geminiTopN: 18,
+  // (los mejor puntuados por el scoring numérico previo). Pocos: el tier
+  // gratuito tiene límite por minuto y por día.
+  geminiTopN: 10,
 
   // Cuántas propuestas finales escribir (Gemini aprueba o descarta).
   // Semanal: ~7 para la semana + margen.
@@ -82,6 +83,16 @@ module.exports = {
 
   // Calidad mínima (1-10) que Gemini debe dar para aprobar el cover.
   minCalidad: 6,
+
+  // ─── GEMINI (ritmo y reintentos para el tier gratuito) ───────────────────────
+  // false = clasifica por TEXTO (metadatos). Más rápido y fiable en gratuito.
+  // true  = intenta analizar el VÍDEO real (mejor juicio, pero suele dar 429).
+  geminiVideoAnalysis: false,
+  // Espera entre llamadas a Gemini (ms) para no superar el límite por minuto.
+  geminiDelayMs: 4500,
+  // Reintentos ante 429 (cuota/ritmo) y espera base entre reintentos.
+  geminiMaxRetries: 2,
+  geminiRetryDelayMs: 8000,
 
   titleBlacklist: [
     'karaoke', 'lyrics', 'letra', 'instrumental', 'backing track',

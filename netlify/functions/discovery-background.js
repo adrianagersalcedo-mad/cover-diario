@@ -94,12 +94,51 @@ async function fetchChannelSubs(channelIds) {
 //                              propuestas vacías. Devuelve el MISMO JSON.
 // Solo si AMBOS fallan se descarta el vídeo.
 
-async function geminiEval(videoId) {
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// POST genérico a Gemini con reintento ante 429 (cuota/ritmo). Devuelve el JSON
+// parseado o null. Centraliza el manejo de errores de geminiEval/geminiEvalText.
+async function geminiGenerate(parts) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
-
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  const body = { contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } };
+  const maxRetries = CONFIG.geminiMaxRetries ?? 2;
 
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.status === 429) {
+        if (attempt === maxRetries) {
+          console.warn(`  ⚠ Gemini 429 (cuota/ritmo) tras ${maxRetries + 1} intentos`);
+          return null;
+        }
+        const wait = (CONFIG.geminiRetryDelayMs ?? 8000) * (attempt + 1);
+        console.warn(`  ⏳ Gemini 429 — espera ${wait}ms y reintenta`);
+        await sleep(wait);
+        continue;
+      }
+      if (!res.ok) {
+        const err = await res.text();
+        console.warn(`  ⚠ Gemini ${res.status} — ${err.slice(0, 150)}`);
+        return null;
+      }
+      const data = await res.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      return JSON.parse(text);
+    } catch (e) {
+      console.warn(`  ⚠ Gemini ${e.message}`);
+      return null;
+    }
+  }
+  return null;
+}
+
+async function geminiEval(videoId) {
   const prompt = `Eres el curador de un blog musical llamado Refrito. El proyecto descubre covers de canciones grabados por músicos amateurs — desde una habitación con el móvil hasta una grabación casera cuidada, pero NUNCA artistas profesionales con discográfica.
 
 Analiza este vídeo de YouTube y responde SOLO con un objeto JSON con estos campos exactos:
@@ -125,51 +164,19 @@ esAmateur=true: grabación en casa/habitación/estudio casero, sonido imperfecto
 Si no puedes identificar la canción o el artista original, deja esos campos como cadena vacía "".
 Responde SOLO el JSON, sin markdown ni explicaciones.`;
 
-  const body = {
-    contents: [{
-      parts: [
-        { fileData: { mimeType: 'video/*', fileUri: `https://www.youtube.com/watch?v=${videoId}` } },
-        { text: prompt },
-      ],
-    }],
-    generationConfig: { responseMimeType: 'application/json' },
-  };
-
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      console.warn(`  ⚠ Gemini ${videoId}: ${res.status} — ${err.slice(0, 200)}`);
-      return null;
-    }
-
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    return JSON.parse(text);
-  } catch (e) {
-    console.warn(`  ⚠ Gemini ${videoId}: ${e.message}`);
-    return null;
-  }
+  return geminiGenerate([
+    { fileData: { mimeType: 'video/*', fileUri: `https://www.youtube.com/watch?v=${videoId}` } },
+    { text: prompt },
+  ]);
 }
 
 // FALLBACK basado en TEXTO. Mismo modelo, mismo endpoint, mismo JSON de salida,
 // pero clasificando a partir de los METADATOS del vídeo (título, descripción,
 // canal) en lugar del vídeo en sí. Se usa cuando geminiEval() devuelve null.
 async function geminiEvalText(video) {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) return null;
-
-  const videoId     = video.id;
   const titulo      = video.snippet?.title        || '';
   const canal       = video.snippet?.channelTitle || '';
   const descripcion = (video.snippet?.description || '').slice(0, 1500);
-
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
 
   const prompt = `Eres el curador de un blog musical llamado Refrito. El proyecto descubre covers de canciones grabados por músicos amateurs — desde una habitación con el móvil hasta una grabación casera cuidada, pero NUNCA artistas profesionales con discográfica.
 
@@ -202,31 +209,7 @@ esAmateur=true: indicios de grabación en casa/habitación/estudio casero, músi
 Si no puedes identificar la canción o el artista original, deja esos campos como cadena vacía "".
 Responde SOLO el JSON, sin markdown ni explicaciones.`;
 
-  const body = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { responseMimeType: 'application/json' },
-  };
-
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      console.warn(`  ⚠ Gemini texto ${videoId}: ${res.status} — ${err.slice(0, 200)}`);
-      return null;
-    }
-
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    return JSON.parse(text);
-  } catch (e) {
-    console.warn(`  ⚠ Gemini texto ${videoId}: ${e.message}`);
-    return null;
-  }
+  return geminiGenerate([{ text: prompt }]);
 }
 
 // ─── GITHUB API ───────────────────────────────────────────────────────────────
@@ -494,6 +477,7 @@ exports.handler = async function () {
 
     // Evaluación con Gemini (ve el vídeo real de YouTube)
     const approved = [];
+    let geminiCalls = 0;
     for (const video of preRanked) {
       if (!useGemini) {
         // Sin Gemini: aprueba todo el pre-ranking
@@ -501,11 +485,20 @@ exports.handler = async function () {
         continue;
       }
 
-      // Estrategia robusta: primero análisis del vídeo real; si falla (típico en
-      // el tier gratuito), fallback a clasificación por texto/metadatos.
-      let result = await geminiEval(video.id);
-      let modo   = 'vídeo';
-      if (!result) {
+      // Control de ritmo: espacia las llamadas para no superar el límite por
+      // minuto del tier gratuito (causa de los 429 en ráfaga).
+      if (geminiCalls > 0) await sleep(CONFIG.geminiDelayMs ?? 4500);
+      geminiCalls++;
+
+      // Por defecto clasificamos por TEXTO (rápido y fiable en el tier gratuito).
+      // El análisis del vídeo real solo si CONFIG.geminiVideoAnalysis = true
+      // (consume mucha más cuota y suele dar 429 en gratuito).
+      let result, modo;
+      if (CONFIG.geminiVideoAnalysis) {
+        result = await geminiEval(video.id);
+        modo   = 'vídeo';
+        if (!result) { result = await geminiEvalText(video); modo = 'texto'; }
+      } else {
         result = await geminiEvalText(video);
         modo   = 'texto';
       }
