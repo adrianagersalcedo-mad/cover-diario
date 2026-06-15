@@ -538,8 +538,11 @@ exports.handler = async function () {
     }
     console.log(`Gemini aprobó: ${approved.length}`);
 
-    // Marca todos los candidatos como vistos (no los volvemos a procesar)
-    newIds.forEach(id => seenIds.add(id));
+    // Marca como vistos SOLO los vídeos que se enviaron a Gemini (preRanked):
+    // son los que ya hemos "gastado" en analizar. Los demás (filtrados por
+    // números o fuera del top) quedan disponibles para futuras tandas, así el
+    // pozo de candidatos no se agota tan rápido.
+    preRanked.forEach(v => seenIds.add(v.id));
 
     // Escribe propuestas
     let escritas = 0;

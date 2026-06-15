@@ -8,35 +8,48 @@ module.exports = {
   // ─── CONSULTAS DE BÚSQUEDA ────────────────────────────────────────────────────
   // Términos amplios + filtro temporal (publishedAfterDays) para encontrar
   // subidas recientes desconocidas. No buscamos lo popular: buscamos lo nuevo.
+  // Consultas diversas a propósito: distintos géneros, estados de ánimo, épocas
+  // e idiomas. Si fueran casi iguales (todas "cover acústico casero"), YouTube
+  // devolvería siempre los mismos vídeos y el dedup los agotaría enseguida.
   queries: [
-    // Inglés — señales de grabación amateur + cover
+    // Inglés — grabación amateur + cover, variando estilo
     'bedroom cover acoustic guitar vocals',
     'acoustic cover one take raw',
     'home recording cover singer',
-    'lo-fi cover acoustic original',
-    'cover session living room acoustic',
-    'singer songwriter cover phone recording',
-    'indie folk cover homemade recording',
-    'acoustic cover first upload',
-    'cover acoustic no effects raw vocals',
-    'bedroom pop cover guitar',
+    'lo-fi cover acoustic',
+    'living room session cover',
+    'soul cover bedroom voice',
+    'indie folk cover homemade',
+    'r&b acoustic cover home',
+    'jazz standard cover home voice',
+    'bossa nova cover acoustic home',
+    '90s song acoustic cover bedroom',
+    '80s song cover acoustic homemade',
+    'singer songwriter cover live take',
+    'ukulele cover home recording',
+    'cover acoustic raw vocals no autotune',
 
-    // Español — idem
+    // Español — variando género y región
     'cover acústico casero guitarra voz',
     'versión acústica grabación propia',
-    'cover casero guitarra acústica',
-    'cantautor cover acústico original',
+    'cantautor cover acústico',
     'cover indie español casero',
-    'versión propia acústica guitarra',
-    'cover folk acústico grabado en casa',
-    'cover acústico sin producción',
-    'cover rock acústico casero',
-    'cover pop acústico guitarra voz',
+    'cover flamenco casero guitarra',
+    'cover bolero casero voz guitarra',
+    'cover rock español acústico casero',
+    'versión acústica canción 90s español',
+    'cover pop latino acústico casero',
+    'cover trap reggaeton versión acústica',
+
+    // Portugués / francés / italiano — abre el campo
+    'cover acústico violão voz caseiro',
+    'reprise acoustique guitare voix maison',
+    'cover acustica voce chitarra casa',
   ],
 
   // Cuántas consultas por tanda. Al ser semanal, usamos todas (= queries.length)
   // para máxima variedad en la única ejecución de la semana.
-  queriesPerRun: 20,
+  queriesPerRun: 28,
 
   // Resultados por consulta
   maxResultsPerQuery: 25,
