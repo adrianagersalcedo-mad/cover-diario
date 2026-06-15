@@ -34,8 +34,9 @@ module.exports = {
     'cover pop acústico guitarra voz',
   ],
 
-  // Cuántas consultas por tanda diaria
-  queriesPerRun: 10,
+  // Cuántas consultas por tanda. Al ser semanal, usamos todas (= queries.length)
+  // para máxima variedad en la única ejecución de la semana.
+  queriesPerRun: 20,
 
   // Resultados por consulta
   maxResultsPerQuery: 25,
@@ -60,10 +61,14 @@ module.exports = {
 
   // Cuántos candidatos enviar a Gemini para evaluación profunda
   // (los mejor puntuados por el scoring numérico previo)
-  geminiTopN: 12,
+  geminiTopN: 18,
 
-  // Cuántos propuestas finales escribir (Gemini aprueba o descarta)
-  topN: 8,
+  // Cuántas propuestas finales escribir (Gemini aprueba o descarta).
+  // Semanal: ~7 para la semana + margen.
+  topN: 9,
+
+  // Calidad mínima (1-10) que Gemini debe dar para aprobar el cover.
+  minCalidad: 6,
 
   titleBlacklist: [
     'karaoke', 'lyrics', 'letra', 'instrumental', 'backing track',
@@ -75,7 +80,14 @@ module.exports = {
     'vevo',
     'live at madison', 'live at wembley', 'live concert',
     '#shorts', ' shorts',
+    // Recopilatorios / playlists (no son una sola interpretación)
     'full album', 'compilation', 'compilación', 'best of', 'medley',
+    'playlist', 'non stop', 'nonstop', 'mix ', ' mix', 'megamix',
+    'collection', 'colección', 'colección', 'songs collection',
+    'hit songs', 'greatest hits', 'top covers', 'best covers',
+    'vol.', 'vol ', 'volume ', 'parte ', 'part ',
+    '1 hour', '2 hours', 'horas de', 'hours of',
+    // Instrumentos/estilos que no encajan con el proyecto
     'piano cover', 'metal cover', 'orchestra',
   ],
 

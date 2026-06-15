@@ -58,6 +58,30 @@ async function enrichVideos(ids) {
   return data.items || [];
 }
 
+// El nº de suscriptores NO viene en videos.list (es un dato de canal).
+// Hay que pedirlo a channels.list. Devuelve un Map channelId → subs.
+// Si el canal oculta sus subs, queda como null (desconocido, no se filtra).
+async function fetchChannelSubs(channelIds) {
+  const map = new Map();
+  const unique = [...new Set(channelIds.filter(Boolean))];
+  for (let i = 0; i < unique.length; i += 50) {
+    try {
+      const data = await ytGet('channels', {
+        part: 'statistics',
+        id: unique.slice(i, i + 50).join(','),
+      });
+      for (const ch of (data.items || [])) {
+        const hidden = ch.statistics?.hiddenSubscriberCount;
+        const subs   = hidden ? null : parseInt(ch.statistics?.subscriberCount || '0', 10);
+        map.set(ch.id, subs);
+      }
+    } catch (e) {
+      console.warn(`  ⚠ channels lote ${i}: ${e.message}`);
+    }
+  }
+  return map;
+}
+
 // ─── GEMINI API ────────────────────────────────────────────────────────────────
 // Gemini puede ver vídeos de YouTube directamente — le pasamos la URL y
 // analiza el contenido visual y auditivo, no solo el título.
@@ -74,15 +98,21 @@ Analiza este vídeo de YouTube y responde SOLO con un objeto JSON con estos camp
 
 {
   "esAmateur": true o false,
+  "esUnaSolaCancion": true o false,
+  "calidad": número entero del 1 al 10,
   "tituloCancion": "título de la canción que están versionando",
   "artistaOriginal": "artista o banda que grabó el original",
   "notaCuratorial": "una frase (máx 25 palabras) sobre qué hace especial esta versión — solo si esAmateur=true",
-  "razon": "por qué lo descartas — solo si esAmateur=false"
+  "razon": "por qué lo descartas — solo si esAmateur=false o esUnaSolaCancion=false"
 }
 
-Criterios para esAmateur=false: artista con discográfica, canal oficial de un sello, producción claramente profesional, concierto con escenario y luces de gran formato, playback, AI cover, karaoke, tutorial.
+esAmateur=false si: artista con discográfica, canal oficial de un sello, producción claramente profesional, concierto de gran formato, playback, AI cover, karaoke, tutorial, o un canal con cientos de miles de seguidores tipo banda consolidada (ej. Boyce Avenue, Our Last Night).
 
-Criterios para esAmateur=true: grabación en casa/habitación/estudio casero, sonido imperfecto pero auténtico, músico desconocido o con pocos seguidores, interpretación personal de una canción conocida.
+esUnaSolaCancion=false si: es un recopilatorio, playlist, mix, "non stop", "best of", medley, o varias canciones seguidas. Refrito publica UNA interpretación, no compilaciones.
+
+calidad (1-10): valora la interpretación y el encanto del cover amateur. 1-3 = desafinado/sin gracia/ruido; 4-5 = correcto pero olvidable; 6-7 = sólido, conecta; 8-10 = sobresaliente, emotivo, lo publicarías sin dudar.
+
+esAmateur=true: grabación en casa/habitación/estudio casero, sonido imperfecto pero auténtico, músico desconocido o con pocos seguidores, interpretación personal de una canción conocida.
 
 Si no puedes identificar la canción o el artista original, deja esos campos como cadena vacía "".
 Responde SOLO el JSON, sin markdown ni explicaciones.`;
@@ -177,12 +207,13 @@ function parseDuration(iso) {
   return (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0);
 }
 
-function filterVideo(v) {
+function filterVideo(v, subsByChannel) {
   const title   = (v.snippet?.title        || '').toLowerCase();
   const channel = (v.snippet?.channelTitle || '').toLowerCase();
   const dur     = parseDuration(v.contentDetails?.duration);
-  const views   = parseInt(v.statistics?.viewCount        || '0', 10);
-  const subs    = parseInt(v.statistics?.subscriberCount  || '0', 10);
+  const views   = parseInt(v.statistics?.viewCount || '0', 10);
+  // subs reales del canal (Map). null = oculto/desconocido → no se filtra por subs.
+  const subs    = subsByChannel ? subsByChannel.get(v.snippet?.channelId) : null;
 
   if (v.status?.embeddable === false)                                          return false;
   if (dur < CONFIG.minDurationSeconds)                                         return false;
@@ -190,7 +221,7 @@ function filterVideo(v) {
   if (CONFIG.channelBlacklist.some(kw => channel.includes(kw.toLowerCase()))) return false;
   if (CONFIG.minViewCount       != null && views < CONFIG.minViewCount)        return false;
   if (CONFIG.maxViewCount       != null && views > CONFIG.maxViewCount)        return false;
-  if (CONFIG.maxSubscriberCount != null && subs  > CONFIG.maxSubscriberCount)  return false;
+  if (CONFIG.maxSubscriberCount != null && subs != null && subs > CONFIG.maxSubscriberCount) return false;
 
   return true;
 }
@@ -250,7 +281,7 @@ function buildProposal(video, geminiResult, sourceQuery) {
     numeroPista:      null,
     _videoTitulo:     snippet.title                  || '',
     _vistas:          parseInt(stats.viewCount       || '0', 10),
-    _subs:            parseInt(stats.subscriberCount || '0', 10),
+    _calidad:         geminiResult?.calidad ?? null,
     _descubierto:     new Date().toISOString(),
     _query:           sourceQuery,
   };
@@ -358,11 +389,14 @@ exports.handler = async function () {
     }
     console.log(`Enriquecidos: ${enriched.length}`);
 
+    // Subs reales de cada canal (videos.list no los trae)
+    const subsByChannel = await fetchChannelSubs(enriched.map(v => v.snippet?.channelId));
+
     // Filtro numérico + diversidad de canal
     const channelCount = {};
     const maxPerCh     = CONFIG.maxVideosPerChannel || 1;
     const filtered = enriched
-      .filter(filterVideo)
+      .filter(v => filterVideo(v, subsByChannel))
       .filter(v => {
         const ch = v.snippet?.channelId || 'x';
         channelCount[ch] = (channelCount[ch] || 0) + 1;
@@ -389,17 +423,27 @@ exports.handler = async function () {
 
       const result = await geminiEval(video.id);
       if (!result) {
-        console.log(`  ? ${video.id} — Gemini sin respuesta, incluido igualmente`);
-        approved.push({ video, gemini: null });
+        // Gemini activo pero sin respuesta (error/cuota): descartamos en vez de
+        // colar una propuesta sin analizar (campos vacíos).
+        console.log(`  ✗ ${video.id} — Gemini sin respuesta, descartado`);
         continue;
       }
 
       if (result.esAmateur === false) {
-        console.log(`  ✗ ${video.id} — Gemini: descartado (${result.razon || 'no amateur'})`);
+        console.log(`  ✗ ${video.id} — Gemini: no amateur (${result.razon || '—'})`);
+        continue;
+      }
+      if (result.esUnaSolaCancion === false) {
+        console.log(`  ✗ ${video.id} — Gemini: recopilatorio/playlist (${result.razon || '—'})`);
+        continue;
+      }
+      const calidad = Number(result.calidad);
+      if (CONFIG.minCalidad != null && Number.isFinite(calidad) && calidad < CONFIG.minCalidad) {
+        console.log(`  ✗ ${video.id} — Gemini: calidad ${calidad} < ${CONFIG.minCalidad}`);
         continue;
       }
 
-      console.log(`  ✓ ${video.id} — "${result.tituloCancion}" (${result.artistaOriginal})`);
+      console.log(`  ✓ ${video.id} — "${result.tituloCancion}" (${result.artistaOriginal}) · calidad ${calidad || '?'}`);
       approved.push({ video, gemini: result });
 
       if (approved.length >= CONFIG.topN) break;
