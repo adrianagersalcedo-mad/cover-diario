@@ -2,6 +2,13 @@
   command   = "node scripts/build.js"
   publish   = "."
 
+# CORS para el contenido JSON: permite que la app (Flutter web/PWA) lo lea
+# desde otro origen. Es contenido público; no expone nada sensible.
+[[headers]]
+  for = "/content/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
 [build.environment]
   NODE_VERSION = "18"
 
