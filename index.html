@@ -24,6 +24,24 @@
   <meta name="twitter:title"       content="Refrito — Un cover al día">
   <meta name="twitter:description" content="Cada día, un cover amateur. Tu mixtape de confianza.">
   <meta name="twitter:image"       content="https://refrito.org/og-default.png">
+  <!-- Datos estructurados (SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Refrito",
+    "alternateName": "Refrito — Un cover al día",
+    "url": "https://refrito.org/",
+    "description": "Cada día, un cover amateur curado a mano. Tu mixtape de confianza.",
+    "inLanguage": "es",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Refrito",
+      "url": "https://refrito.org/",
+      "logo": "https://refrito.org/logo.svg"
+    }
+  }
+  </script>
 </head>
 <body>
 <div class="page">
@@ -90,6 +108,11 @@
     <section class="curatorial-section" aria-label="Texto curatorial">
       <div id="curatorial-text"></div>
     </section>
+
+    <!-- SIGUIENTE EN LA CINTA (recomendación) -->
+    <a id="recm-band" class="recm" hidden aria-label="Siguiente recomendación">
+      <span class="recm-track"></span>
+    </a>
 
     <!-- CREDITS -->
     <section class="credits-section" aria-label="Créditos">

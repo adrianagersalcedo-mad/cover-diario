@@ -50,6 +50,24 @@ export default async (request, context) => {
   const image  = `https://refrito.org/og-image/${fecha}.png`;
   const pageUrl = escapeAttr(`https://refrito.org/pista.html?fecha=${fecha}`);
 
+  // Datos estructurados (MusicRecording) para SEO. JSON.stringify + escape de "<"
+  // para no romper el </script> si el contenido tuviera caracteres raros.
+  const ldJson = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'MusicRecording',
+    name: cover.tituloCancion || '',
+    url: `https://refrito.org/pista.html?fecha=${fecha}`,
+    image,
+    inLanguage: 'es',
+    byArtist: { '@type': 'MusicGroup', name: cover.interpreteCover || '' },
+    recordingOf: {
+      '@type': 'MusicComposition',
+      name: cover.tituloCancion || '',
+      composer: { '@type': 'MusicGroup', name: cover.artistaOriginal || '' },
+    },
+    isPartOf: { '@type': 'WebSite', name: 'Refrito', url: 'https://refrito.org/' },
+  }).replace(/</g, '\\u003c');
+
   const ogTags = `
   <!-- Open Graph dinámico — inyectado por Edge Function -->
   <meta property="og:type"         content="article">
@@ -65,7 +83,8 @@ export default async (request, context) => {
   <meta name="twitter:title"       content="${title}">
   <meta name="twitter:description" content="${desc}">
   <meta name="twitter:image"       content="${image}">
-  <title>${title}</title>`;
+  <title>${title}</title>
+  <script type="application/ld+json">${ldJson}</script>`;
 
   // Reemplaza el bloque de fallback en el HTML
   const html     = await response.text();

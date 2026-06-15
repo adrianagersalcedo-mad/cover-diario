@@ -83,8 +83,16 @@ async function fetchChannelSubs(channelIds) {
 }
 
 // ─── GEMINI API ────────────────────────────────────────────────────────────────
-// Gemini puede ver vídeos de YouTube directamente — le pasamos la URL y
-// analiza el contenido visual y auditivo, no solo el título.
+// Estrategia de clasificación en dos pasos (ver handler):
+//   1) geminiEval(videoId)   → análisis del VÍDEO real (fileData/fileUri de YouTube).
+//                              Es lo ideal: Gemini ve imagen y audio. Pero el tier
+//                              gratuito de la API suele rechazar el análisis de
+//                              vídeos de YouTube por URL y devuelve null.
+//   2) geminiEvalText(video) → FALLBACK basado SOLO en metadatos (título,
+//                              descripción, canal). No "ve" el vídeo, pero permite
+//                              clasificar y rellenar los campos en vez de generar
+//                              propuestas vacías. Devuelve el MISMO JSON.
+// Solo si AMBOS fallan se descarta el vídeo.
 
 async function geminiEval(videoId) {
   const key = process.env.GEMINI_API_KEY;
@@ -145,6 +153,78 @@ Responde SOLO el JSON, sin markdown ni explicaciones.`;
     return JSON.parse(text);
   } catch (e) {
     console.warn(`  ⚠ Gemini ${videoId}: ${e.message}`);
+    return null;
+  }
+}
+
+// FALLBACK basado en TEXTO. Mismo modelo, mismo endpoint, mismo JSON de salida,
+// pero clasificando a partir de los METADATOS del vídeo (título, descripción,
+// canal) en lugar del vídeo en sí. Se usa cuando geminiEval() devuelve null.
+async function geminiEvalText(video) {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) return null;
+
+  const videoId     = video.id;
+  const titulo      = video.snippet?.title        || '';
+  const canal       = video.snippet?.channelTitle || '';
+  const descripcion = (video.snippet?.description || '').slice(0, 1500);
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+
+  const prompt = `Eres el curador de un blog musical llamado Refrito. El proyecto descubre covers de canciones grabados por músicos amateurs — desde una habitación con el móvil hasta una grabación casera cuidada, pero NUNCA artistas profesionales con discográfica.
+
+NO puedes ver ni escuchar el vídeo. Clasifícalo ÚNICAMENTE a partir de sus METADATOS de YouTube:
+
+TÍTULO: ${titulo}
+CANAL: ${canal}
+DESCRIPCIÓN: ${descripcion}
+
+Responde SOLO con un objeto JSON con estos campos exactos:
+
+{
+  "esAmateur": true o false,
+  "esUnaSolaCancion": true o false,
+  "calidad": número entero del 1 al 10,
+  "tituloCancion": "título de la canción que están versionando",
+  "artistaOriginal": "artista o banda que grabó el original",
+  "notaCuratorial": "una frase (máx 25 palabras) sobre qué hace especial esta versión — solo si esAmateur=true",
+  "razon": "por qué lo descartas — solo si esAmateur=false o esUnaSolaCancion=false"
+}
+
+esAmateur=false si: artista con discográfica, canal oficial de un sello, producción claramente profesional, concierto de gran formato, playback, AI cover, karaoke, tutorial, o un canal con cientos de miles de seguidores tipo banda consolidada (ej. Boyce Avenue, Our Last Night).
+
+esUnaSolaCancion=false si: es un recopilatorio, playlist, mix, "non stop", "best of", medley, o varias canciones seguidas. Refrito publica UNA interpretación, no compilaciones.
+
+calidad (1-10): al no ver el vídeo, estima a partir de la canción versionada, el cuidado del título/descripción y las señales de que es un cover amateur con encanto. 1-3 = poco prometedor; 4-5 = correcto; 6-7 = sólido; 8-10 = muy prometedor.
+
+esAmateur=true: indicios de grabación en casa/habitación/estudio casero, músico desconocido o con pocos seguidores, interpretación personal de una canción conocida.
+
+Si no puedes identificar la canción o el artista original, deja esos campos como cadena vacía "".
+Responde SOLO el JSON, sin markdown ni explicaciones.`;
+
+  const body = {
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { responseMimeType: 'application/json' },
+  };
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.warn(`  ⚠ Gemini texto ${videoId}: ${res.status} — ${err.slice(0, 200)}`);
+      return null;
+    }
+
+    const data = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    return JSON.parse(text);
+  } catch (e) {
+    console.warn(`  ⚠ Gemini texto ${videoId}: ${e.message}`);
     return null;
   }
 }
@@ -421,13 +501,21 @@ exports.handler = async function () {
         continue;
       }
 
-      const result = await geminiEval(video.id);
+      // Estrategia robusta: primero análisis del vídeo real; si falla (típico en
+      // el tier gratuito), fallback a clasificación por texto/metadatos.
+      let result = await geminiEval(video.id);
+      let modo   = 'vídeo';
       if (!result) {
-        // Gemini activo pero sin respuesta (error/cuota): descartamos en vez de
-        // colar una propuesta sin analizar (campos vacíos).
-        console.log(`  ✗ ${video.id} — Gemini sin respuesta, descartado`);
+        result = await geminiEvalText(video);
+        modo   = 'texto';
+      }
+      if (!result) {
+        // Ni vídeo ni texto: Gemini activo pero sin respuesta (error/cuota).
+        // Descartamos en vez de colar una propuesta sin analizar (campos vacíos).
+        console.log(`  ✗ ${video.id} — Gemini sin respuesta (vídeo y texto fallaron), descartado`);
         continue;
       }
+      console.log(`  · ${video.id} — analizado vía ${modo}`);
 
       if (result.esAmateur === false) {
         console.log(`  ✗ ${video.id} — Gemini: no amateur (${result.razon || '—'})`);

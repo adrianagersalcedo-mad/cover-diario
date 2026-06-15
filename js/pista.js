@@ -242,6 +242,13 @@ async function init() {
     renderCover(cover, list);
     initShare();
     initLike(cover.fecha);
+
+    // Siguiente en la cinta (recomendación por tags)
+    const today = new Date().toISOString().slice(0, 10);
+    const past  = list.filter(d => d <= today);
+    const allCovers = await loadAllCovers(past);
+    const { cover: rec, razon } = pickRecommendation(cover, allCovers);
+    renderRecommendation(rec, razon);
   } catch (err) {
     console.error(err);
     document.getElementById('main-content').innerHTML =
