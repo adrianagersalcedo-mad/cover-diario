@@ -155,11 +155,9 @@
     <section class="feedback-block" aria-label="Tu opinión">
       <p class="feedback-heading">¿Qué te parece refrito.org?</p>
       <p class="feedback-sub">Cuéntanoslo. Leemos todo — nos ayuda a mejorar el proyecto.</p>
-      <form class="feedback-form" name="opiniones" method="POST"
-            data-netlify="true" netlify-honeypot="bot-field">
-        <input type="hidden" name="form-name" value="opiniones">
+      <form class="feedback-form" method="POST">
         <p class="feedback-hp" hidden>
-          <label>No rellenar: <input name="bot-field"></label>
+          <label>No rellenar: <input name="bot"></label>
         </p>
         <textarea class="feedback-text" id="fb-msg" name="mensaje" rows="3"
           placeholder="Lo que sea: qué te gusta, qué cambiarías, una idea…" required></textarea>

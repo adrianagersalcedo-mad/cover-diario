@@ -1,7 +1,5 @@
-/* feedback.js — Envía la opinión sobre el sitio a Netlify Forms sin recargar.
-   Netlify detecta el formulario "opiniones" en el HTML estático y guarda cada
-   envío en el panel; activa la notificación por email en
-   Netlify → Forms → opiniones → Settings → Form notifications. */
+/* feedback.js — Envía la opinión sobre el sitio a la función /feedback,
+   que la reenvía a Telegram al instante. Sin recargar la página. */
 
 (function () {
   const form = document.querySelector('form.feedback-form');
@@ -19,17 +17,20 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const data = new FormData(form);
-    if (data.get('bot-field')) return; // honeypot: bot → ignora en silencio
+    if (form.querySelector('[name="bot"]')?.value) return; // honeypot
+
+    const mensaje = form.querySelector('[name="mensaje"]')?.value.trim() || '';
+    const email   = form.querySelector('[name="email"]')?.value.trim() || '';
+    if (!mensaje) { setStatus('Escribe algo antes de enviar.', 'error'); return; }
 
     btn.disabled = true;
     setStatus('Enviando…', 'sending');
 
     try {
-      const res = await fetch('/', {
+      const res = await fetch('/.netlify/functions/feedback', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data).toString(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensaje, email }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       form.reset();
