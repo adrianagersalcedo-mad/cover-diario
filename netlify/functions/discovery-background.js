@@ -481,6 +481,7 @@ exports.handler = async function () {
     // Evaluación con Gemini (ve el vídeo real de YouTube)
     const approved = [];
     let geminiCalls = 0;
+    let fallosSeguidos = 0;
     for (const video of preRanked) {
       if (!useGemini) {
         // Sin Gemini: aprueba todo el pre-ranking
@@ -507,10 +508,16 @@ exports.handler = async function () {
       }
       if (!result) {
         // Ni vídeo ni texto: Gemini activo pero sin respuesta (error/cuota).
-        // Descartamos en vez de colar una propuesta sin analizar (campos vacíos).
-        console.log(`  ✗ ${video.id} — Gemini sin respuesta (vídeo y texto fallaron), descartado`);
+        console.log(`  ✗ ${video.id} — Gemini sin respuesta, descartado`);
+        // Corte rápido: si las primeras llamadas fallan seguidas (típico de cuota
+        // agotada), abortamos para no perder 5 min reintentando en vano.
+        if (++fallosSeguidos >= 3 && approved.length === 0) {
+          console.log('  ⛔ Gemini falla repetidamente (cuota agotada) — aborto la ronda');
+          break;
+        }
         continue;
       }
+      fallosSeguidos = 0;
       console.log(`  · ${video.id} — analizado vía ${modo}`);
 
       if (result.esAmateur === false) {
