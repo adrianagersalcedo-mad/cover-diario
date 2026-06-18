@@ -101,7 +101,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function geminiGenerate(parts) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  const model = CONFIG.geminiModel || 'gemini-2.0-flash-lite';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
   const body = { contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } };
   const maxRetries = CONFIG.geminiMaxRetries ?? 2;
 
