@@ -50,11 +50,6 @@ async function ghDelete(path, message, sha) {
   if (!res.ok) throw new Error(`GitHub DELETE ${path}: ${res.status}`);
   return res.json();
 }
-async function ghList(dir) {
-  const data = await ghGet(dir);
-  return Array.isArray(data) ? data : [];
-}
-
 // ─── Telegram ───────────────────────────────────────────────────────────────
 async function tgAnswerCallback(id, text) {
   await fetch(`${TG()}/answerCallbackQuery`, {
@@ -69,51 +64,20 @@ async function tgEditText(chatId, messageId, text) {
   }).catch(() => {});
 }
 
-// ─── Programación del cover al aprobar ───────────────────────────────────────
-function addDays(iso, n) {
-  const d = new Date(iso + 'T00:00:00Z');
-  d.setUTCDate(d.getUTCDate() + n);
-  return d.toISOString().slice(0, 10);
-}
-
-async function nextSlot() {
-  // Lee las pistas ya publicadas para calcular el siguiente día/número libres.
-  const items = await ghList('content/covers');
-  const dates = items
-    .map((f) => f.name.replace('.json', ''))
-    .filter((n) => /^\d{4}-\d{2}-\d{2}$/.test(n))
-    .sort();
-  const hoy = new Date().toISOString().slice(0, 10);
-  const ultima = dates.length ? dates[dates.length - 1] : hoy;
-  const fecha = addDays(ultima >= hoy ? ultima : hoy, 1);
-  const numeroPista = dates.length + 1;
-  return { fecha, numeroPista };
-}
-
+// ─── Aprobar (a la lista, SIN fecha) ─────────────────────────────────────────
+// "Sí" solo marca la propuesta como aprobada: entra en el backlog de aprobados.
+// NO le asigna fecha ni la publica — el orden y el día los decides tú luego.
 async function aprobar(youtubeId) {
   const path = `content/proposals/${youtubeId}.json`;
   const file = await ghGet(path);
   if (!file) return { ok: false, msg: 'La propuesta ya no existe' };
   const prop = JSON.parse(Buffer.from(file.content, 'base64').toString('utf-8'));
+  if (prop.estado === 'aprobada') return { ok: true };
 
-  const { fecha, numeroPista } = await nextSlot();
-  const cover = {
-    id: `cover-${numeroPista}`,
-    youtubeId: prop.youtubeId,
-    fecha,
-    numeroPista,
-    tituloCancion: prop.tituloCancion || '',
-    interpreteCover: prop.interpreteCover || '',
-    canalCoverUrl: prop.canalCoverUrl || '',
-    artistaOriginal: prop.artistaOriginal || '',
-    videoOriginalUrl: prop.videoOriginalUrl || '',
-    textoCuratorial: prop.textoCuratorial || '',
-    tags: prop.tags || [],
-  };
-  const encoded = Buffer.from(JSON.stringify(cover, null, 2) + '\n').toString('base64');
-  await ghPut(`content/covers/${fecha}.json`, encoded, `cover: aprueba ${youtubeId} vía Telegram → ${fecha}`);
-  await ghDelete(path, `proposal: ${youtubeId} aprobada (Telegram)`, file.sha);
-  return { ok: true, fecha, numeroPista, cover };
+  prop.estado = 'aprobada';
+  const encoded = Buffer.from(JSON.stringify(prop, null, 2) + '\n').toString('base64');
+  await ghPut(path, encoded, `proposal: ${youtubeId} aprobada vía Telegram (a la lista, sin fecha)`, file.sha);
+  return { ok: true };
 }
 
 async function descartar(youtubeId) {
@@ -148,7 +112,7 @@ exports.handler = async (event) => {
     if (accion === 'ok') {
       const r = await aprobar(youtubeId);
       await tgAnswerCallback(cq.id, r.ok ? '✅ Aprobada' : r.msg);
-      if (r.ok) await tgEditText(chatId, messageId, `${baseText}\n\n✅ <b>Aprobada</b> — se publica el ${r.fecha} (pista ${r.numeroPista})`);
+      if (r.ok) await tgEditText(chatId, messageId, `${baseText}\n\n✅ <b>Aprobada</b> — en la lista (la programas tú cuando quieras)`);
     } else if (accion === 'no') {
       const r = await descartar(youtubeId);
       await tgAnswerCallback(cq.id, r.ok ? '❌ Descartada' : r.msg);
