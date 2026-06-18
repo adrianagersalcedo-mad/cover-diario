@@ -150,6 +150,7 @@ Analiza este vídeo de YouTube y responde SOLO con un objeto JSON con estos camp
   "tituloCancion": "título de la canción que están versionando",
   "artistaOriginal": "artista o banda que grabó el original",
   "notaCuratorial": "una frase (máx 25 palabras) sobre qué hace especial esta versión — solo si esAmateur=true",
+  "borradorCuratorial": "borrador de 2 párrafos cortos (máx 90 palabras en total), en español, tono editorial e íntimo de Refrito: el primer párrafo sitúa la canción original y su autor; el segundo, qué hace esta versión casera y por qué merece la pena. Sin clichés. Solo si esAmateur=true",
   "razon": "por qué lo descartas — solo si esAmateur=false o esUnaSolaCancion=false"
 }
 
@@ -195,6 +196,7 @@ Responde SOLO con un objeto JSON con estos campos exactos:
   "tituloCancion": "título de la canción que están versionando",
   "artistaOriginal": "artista o banda que grabó el original",
   "notaCuratorial": "una frase (máx 25 palabras) sobre qué hace especial esta versión — solo si esAmateur=true",
+  "borradorCuratorial": "borrador de 2 párrafos cortos (máx 90 palabras en total), en español, tono editorial e íntimo de Refrito: el primer párrafo sitúa la canción original y su autor; el segundo, qué hace esta versión casera y por qué merece la pena. Sin clichés. Solo si esAmateur=true",
   "razon": "por qué lo descartas — solo si esAmateur=false o esUnaSolaCancion=false"
 }
 
@@ -338,7 +340,7 @@ function buildProposal(video, geminiResult, sourceQuery) {
     canalCoverUrl:    `https://www.youtube.com/channel/${snippet.channelId}`,
     artistaOriginal:  geminiResult?.artistaOriginal  || '',
     videoOriginalUrl: '',
-    textoCuratorial:  geminiResult?.notaCuratorial   || '',
+    textoCuratorial:  geminiResult?.borradorCuratorial || geminiResult?.notaCuratorial || '',
     miniatura:        thumb,
     fecha:            '',
     numeroPista:      null,
