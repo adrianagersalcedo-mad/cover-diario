@@ -6,11 +6,16 @@
   "canalCoverUrl": "https://www.youtube.com/@DuctusMusic",
   "artistaOriginal": "Andrés Calamaro",
   "videoOriginalUrl": "",
-  "textoCuratorial": "",
+  "textoCuratorial": "De las muchas canciones de amor resignado de Calamaro, 'Te quiero igual' es de las que dicen lo difícil: querer a alguien a pesar de todo, sin condiciones y sin épica. El Salmón está lleno de estas pequeñas verdades dichas como de pasada.\n\nDuctus Music la hace en acústico minimalista, y le sienta bien: sin adornos, la letra pesa lo que tiene que pesar. De esas versiones que recuerdan que debajo de la producción siempre había una buena canción.",
   "miniatura": "https://i.ytimg.com/vi/MC05le4EDLQ/mqdefault.jpg",
   "fecha": "",
   "numeroPista": null,
   "_videoTitulo": "Te quiero igual - Andrés Calamaro | Cover Acústico Minimalista",
   "_descubierto": "2026-06-18T07:16:39.850772Z",
-  "_query": "manual"
+  "_query": "manual",
+  "tags": [
+    "acustico",
+    "rock",
+    "intimo"
+  ]
 }
