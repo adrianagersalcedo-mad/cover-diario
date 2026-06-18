@@ -121,6 +121,23 @@ async function listApproved() {
   return out;
 }
 
+// Covers con fecha futura (programados, aún no publicados), ordenados por fecha.
+async function listFutureCovers() {
+  const items = await ghList('content/covers');
+  const hoy = new Date().toISOString().slice(0, 10);
+  const fut = [];
+  for (const it of items) {
+    const m = it.name.match(/^(\d{4}-\d{2}-\d{2})\.json$/);
+    if (!m || m[1] <= hoy) continue;
+    const f = await ghGet(`content/covers/${it.name}`);
+    if (!f) continue;
+    const c = JSON.parse(Buffer.from(f.content, 'base64').toString('utf-8'));
+    fut.push({ fecha: m[1], titulo: c.tituloCancion, interprete: c.interpreteCover });
+  }
+  fut.sort((a, b) => a.fecha.localeCompare(b.fecha));
+  return fut;
+}
+
 // Calcula el siguiente día y número de pista libres a partir de los covers.
 async function nextSlot() {
   const items = await ghList('content/covers');
@@ -178,13 +195,17 @@ exports.handler = async (event) => {
     const cmd = msg.text.trim().split(/\s+/)[0].toLowerCase().replace(/@.*$/, '');
     try {
       if (cmd === '/cola' || cmd === '/lista') {
-        const cola = await listApproved();
-        if (!cola.length) await tgSend(chatId, 'No hay covers aprobados en la lista.');
-        else {
-          const lineas = cola.map((c, i) =>
-            `${i + 1}. <b>${c.prop.tituloCancion || c.prop._videoTitulo || '(sin título)'}</b> — ${c.prop.interpreteCover || ''}`);
-          await tgSend(chatId, `🎶 <b>Aprobados en cola (${cola.length})</b>\n${lineas.join('\n')}\n\nUsa /siguiente para programar el primero en el próximo día libre.`);
-        }
+        const [fut, cola] = await Promise.all([listFutureCovers(), listApproved()]);
+        let txt = `📅 <b>Programados, por salir (${fut.length})</b>\n`;
+        txt += fut.length
+          ? fut.map((c) => `• ${c.fecha} — ${c.titulo || '(sin título)'} · ${c.interprete || ''}`).join('\n')
+          : '• (ninguno)';
+        txt += `\n\n✅ <b>Aprobados esperando fecha (${cola.length})</b>\n`;
+        txt += cola.length
+          ? cola.map((c, i) => `${i + 1}. ${c.prop.tituloCancion || c.prop._videoTitulo || '(sin título)'} · ${c.prop.interpreteCover || ''}`).join('\n')
+          : '• (ninguno)';
+        txt += `\n\nUsa /siguiente para programar el primero de la espera en el próximo día libre.`;
+        await tgSend(chatId, txt);
       } else if (cmd === '/siguiente' || cmd === '/programar') {
         const r = await programarSiguiente();
         if (!r.ok) await tgSend(chatId, r.msg);
