@@ -55,6 +55,28 @@ async function ghList(dir) {
   return Array.isArray(data) ? data : [];
 }
 
+// Git Data API: permite crear/borrar VARIOS archivos en UN SOLO commit
+// (= un solo deploy de Netlify = 15 créditos para todo el lote).
+async function ghGit(method, path, body) {
+  const [o, r] = ghRepo();
+  const res = await fetch(`https://api.github.com/repos/${o}/${r}/${path}`,
+    { method, headers: ghHeaders(), body: body ? JSON.stringify(body) : undefined });
+  if (!res.ok) throw new Error(`GitHub ${method} ${path}: ${res.status} — ${(await res.text()).slice(0, 200)}`);
+  return res.json();
+}
+
+async function commitMultiple(files, deletes, message) {
+  const branch = ghBranch();
+  const ref  = await ghGit('GET', `git/ref/heads/${branch}`);
+  const base = await ghGit('GET', `git/commits/${ref.object.sha}`);
+  const tree = [];
+  for (const f of files)   tree.push({ path: f.path, mode: '100644', type: 'blob', content: f.content });
+  for (const p of deletes) tree.push({ path: p, mode: '100644', type: 'blob', sha: null });
+  const newTree   = await ghGit('POST', 'git/trees', { base_tree: base.tree.sha, tree });
+  const newCommit = await ghGit('POST', 'git/commits', { message, tree: newTree.sha, parents: [ref.object.sha] });
+  await ghGit('PATCH', `git/refs/heads/${branch}`, { sha: newCommit.sha });
+}
+
 // ─── Telegram ───────────────────────────────────────────────────────────────
 async function tgSend(chatId, text) {
   await fetch(`${TG()}/sendMessage`, {
@@ -138,43 +160,48 @@ async function listFutureCovers() {
   return fut;
 }
 
-// Calcula el siguiente día y número de pista libres a partir de los covers.
-async function nextSlot() {
-  const items = await ghList('content/covers');
-  const dates = items
-    .map((f) => f.name.replace('.json', ''))
-    .filter((n) => /^\d{4}-\d{2}-\d{2}$/.test(n))
-    .sort();
-  const hoy = new Date().toISOString().slice(0, 10);
-  const ultima = dates.length ? dates[dates.length - 1] : hoy;
-  const fecha = addDays(ultima >= hoy ? ultima : hoy, 1);
-  return { fecha, numeroPista: dates.length + 1 };
-}
-
-// Programa el aprobado más antiguo en el primer día libre y lo publica.
-async function programarSiguiente() {
+// Programa los N aprobados más antiguos en los N siguientes días libres,
+// TODO en un solo commit (un solo deploy). La web revela uno por día sola.
+async function programarLote(n) {
   const cola = await listApproved();
   if (!cola.length) return { ok: false, msg: 'No hay covers aprobados en la lista' };
 
-  const { prop, sha, path } = cola[0];
-  const { fecha, numeroPista } = await nextSlot();
-  const cover = {
-    id: `cover-${numeroPista}`,
-    youtubeId: prop.youtubeId,
-    fecha,
-    numeroPista,
-    tituloCancion: prop.tituloCancion || '',
-    interpreteCover: prop.interpreteCover || '',
-    canalCoverUrl: prop.canalCoverUrl || '',
-    artistaOriginal: prop.artistaOriginal || '',
-    videoOriginalUrl: prop.videoOriginalUrl || '',
-    textoCuratorial: prop.textoCuratorial || '',
-    tags: prop.tags || [],
-  };
-  const encoded = Buffer.from(JSON.stringify(cover, null, 2) + '\n').toString('base64');
-  await ghDelete(path, `proposal: ${prop.youtubeId} programada [skip ci]`, sha);
-  await ghPut(`content/covers/${fecha}.json`, encoded, `cover: programa ${prop.youtubeId} → ${fecha} (Telegram)`);
-  return { ok: true, fecha, numeroPista, prop, restantes: cola.length - 1 };
+  // Punto de partida: última fecha y nº de pista existentes.
+  const items = await ghList('content/covers');
+  const dates = items
+    .map((f) => f.name.replace('.json', ''))
+    .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d))
+    .sort();
+  const hoy = new Date().toISOString().slice(0, 10);
+  let ultima = dates.length ? dates[dates.length - 1] : hoy;
+  if (ultima < hoy) ultima = hoy;
+  const basePista = dates.length;
+
+  const lote = cola.slice(0, n);
+  const files = [], deletes = [], programados = [];
+  lote.forEach((c, i) => {
+    const fecha = addDays(ultima, i + 1);
+    const numeroPista = basePista + i + 1;
+    const cover = {
+      id: `cover-${numeroPista}`,
+      youtubeId: c.prop.youtubeId,
+      fecha,
+      numeroPista,
+      tituloCancion: c.prop.tituloCancion || '',
+      interpreteCover: c.prop.interpreteCover || '',
+      canalCoverUrl: c.prop.canalCoverUrl || '',
+      artistaOriginal: c.prop.artistaOriginal || '',
+      videoOriginalUrl: c.prop.videoOriginalUrl || '',
+      textoCuratorial: c.prop.textoCuratorial || '',
+      tags: c.prop.tags || [],
+    };
+    files.push({ path: `content/covers/${fecha}.json`, content: JSON.stringify(cover, null, 2) + '\n' });
+    deletes.push(c.path);
+    programados.push({ fecha, titulo: cover.tituloCancion, interprete: cover.interpreteCover });
+  });
+
+  await commitMultiple(files, deletes, `cover: programa ${lote.length} en lote (Telegram)`);
+  return { ok: true, programados, restantes: cola.length - lote.length };
 }
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
@@ -204,15 +231,20 @@ exports.handler = async (event) => {
         txt += cola.length
           ? cola.map((c, i) => `${i + 1}. ${c.prop.tituloCancion || c.prop._videoTitulo || '(sin título)'} · ${c.prop.interpreteCover || ''}`).join('\n')
           : '• (ninguno)';
-        txt += `\n\nUsa /siguiente para programar el primero de la espera en el próximo día libre.`;
+        txt += `\n\n/siguiente — programar 1 · /programar 7 — programar una semana (1 solo deploy)`;
         await tgSend(chatId, txt);
       } else if (cmd === '/siguiente' || cmd === '/programar') {
-        const r = await programarSiguiente();
+        // /siguiente = 1 · /programar [N] = lote (por defecto 7), todo en 1 deploy
+        const arg = parseInt(msg.text.trim().split(/\s+/)[1], 10);
+        const n = cmd === '/siguiente' ? 1 : (Number.isFinite(arg) ? arg : 7);
+        const r = await programarLote(n);
         if (!r.ok) await tgSend(chatId, r.msg);
-        else await tgSend(chatId,
-          `✅ Programado: <b>${r.prop.tituloCancion || r.prop._videoTitulo}</b> — ${r.prop.interpreteCover}\n📅 ${r.fecha} (pista ${r.numeroPista})\nQuedan ${r.restantes} en la cola.`);
+        else {
+          const lineas = r.programados.map((p) => `• ${p.fecha} — ${p.titulo || '(sin título)'} · ${p.interprete || ''}`).join('\n');
+          await tgSend(chatId, `✅ <b>Programados ${r.programados.length}</b> (1 solo deploy):\n${lineas}\n\nQuedan ${r.restantes} en la cola. La web revela uno por día sola.`);
+        }
       } else if (cmd === '/start' || cmd === '/help' || cmd === '/ayuda') {
-        await tgSend(chatId, 'Refrito 🎵\nTe aviso de covers nuevos con botones Sí/No.\n• /cola — ver aprobados en espera\n• /siguiente — programar el primero en el próximo día libre');
+        await tgSend(chatId, 'Refrito 🎵\nTe aviso de covers nuevos con botones Sí/No.\n• /cola — ver programados y aprobados en espera\n• /siguiente — programar 1 cover\n• /programar 7 — programar 7 de golpe (1 solo deploy = 15 créditos para la semana)');
       }
     } catch (e) {
       console.error('telegram cmd:', e);
