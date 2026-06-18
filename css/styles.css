@@ -902,6 +902,25 @@ body::before {
   text-underline-offset: 3px;
 }
 .text-page a:hover { color: var(--bermellón); }
+.about-cta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--tinta);
+}
+.about-cta a {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid var(--tinta);
+  padding: .55em 1em;
+  transition: background .15s, color .15s;
+}
+.about-cta a:hover { background: var(--tinta); color: var(--day-bg); }
 
 /* ─── STATE / LOADING ─────────────────────────────────────────────────────── */
 .state-msg {
