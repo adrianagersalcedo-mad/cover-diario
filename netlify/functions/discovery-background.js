@@ -415,6 +415,51 @@ async function fetchTrustedChannelIds() {
   return ids;
 }
 
+// ─── AVISO TELEGRAM (Sí/No) ─────────────────────────────────────────────────
+// Envía una tarjeta por cover con enlace para escuchar y botones de aprobar/
+// descartar. Si faltan las variables de entorno, no hace nada (no rompe el flujo).
+async function notifyTelegram(video, gemini) {
+  const token  = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+
+  const id      = video.id;
+  const cancion = gemini?.tituloCancion   || video.snippet?.title || '(sin título)';
+  const interp  = video.snippet?.channelTitle || '';
+  const orig    = gemini?.artistaOriginal || '';
+  const cal     = gemini?.calidad != null ? `· calidad ${gemini.calidad}/10` : '';
+  const nota    = gemini?.notaCuratorial ? `\n<i>${gemini.notaCuratorial}</i>` : '';
+
+  const texto =
+    `🎵 <b>${cancion}</b>` +
+    (orig ? ` — versiona a ${orig}` : '') +
+    `\n${interp} ${cal}` +
+    `${nota}` +
+    `\n\n🎧 https://www.youtube.com/watch?v=${id}`;
+
+  const body = {
+    chat_id: chatId,
+    text: texto,
+    parse_mode: 'HTML',
+    disable_web_page_preview: false,
+    reply_markup: {
+      inline_keyboard: [[
+        { text: '✅ Sí', callback_data: `ok:${id}` },
+        { text: '❌ No', callback_data: `no:${id}` },
+      ]],
+    },
+  };
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    if (!res.ok) console.warn(`  ⚠ Telegram ${id}: ${res.status} — ${(await res.text()).slice(0, 120)}`);
+  } catch (e) {
+    console.warn(`  ⚠ Telegram ${id}: ${e.message}`);
+  }
+}
+
 // ─── HANDLER PRINCIPAL ────────────────────────────────────────────────────────
 
 exports.handler = async function () {
@@ -567,12 +612,12 @@ exports.handler = async function () {
     // pozo de candidatos no se agota tan rápido.
     preRanked.forEach(v => seenIds.add(v.id));
 
-    // Escribe propuestas
+    // Escribe propuestas + avisa por Telegram (Sí/No)
     let escritas = 0;
     for (const { video, gemini } of approved) {
       const sourceQuery = queries.find(q => q) || 'unknown';
       const ok = await writeProposal(video, gemini, sourceQuery);
-      if (ok) escritas++;
+      if (ok) { escritas++; await notifyTelegram(video, gemini); }
     }
 
     await saveSeen(seenIds, seenSha);
