@@ -5,6 +5,9 @@ backend:
 # Permite probar el CMS en local con: npx decap-server
 local_backend: true
 
+# Logo de Refrito en la pantalla de login del admin
+logo_url: https://refrito.org/logo.svg
+
 media_folder: public/uploads
 public_folder: /uploads
 
@@ -84,9 +87,26 @@ collections:
 
       - label: "Etiquetas"
         name: tags
-        widget: list
+        widget: select
+        multiple: true
         required: false
-        hint: "Tags para el motor de recomendación. Ej: acustico, intimo, retiro, folk, rock, piano, soul, live, john-lennon, bob-dylan…"
+        options:
+          - acustico
+          - intimo
+          - piano
+          - retiro
+          - folk
+          - rock
+          - pop
+          - soul
+          - indie
+          - jazz
+          - live
+          - john-lennon
+          - paul-mccartney
+          - bob-dylan
+          - elliott-smith
+        hint: "Tags para el motor de recomendación. Lista cerrada para evitar erratas (acústico vs acustico). ¿Falta una? Se añade en admin/config.yml."
 
 # ─── COLECCIÓN 2: PROPUESTAS PENDIENTES ──────────────────────────────────────
   - name: proposals

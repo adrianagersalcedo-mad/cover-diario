@@ -4,20 +4,78 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>CoverDiario — Admin</title>
+  <title>Refrito — Admin</title>
   <style>
-    /* Pantalla de carga mientras el CMS arranca */
     body { margin: 0; background: #16110D; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     #cms-loading { font-family: 'Space Mono', monospace; color: #EFEAD9; font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; opacity: .5; }
   </style>
 </head>
 <body>
-  <div id="cms-loading">Cargando admin…</div>
+  <div id="cms-loading">Cargando admin de Refrito…</div>
 
-  <!-- Netlify Identity Widget (gestiona el login) -->
+  <!-- Netlify Identity Widget (login) -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+  // ─── Estilos de la vista previa (la identidad de Refrito en el panel) ──────
+  CMS.registerPreviewStyle(
+    "@import url('https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap');" +
+    "body{margin:0;background:#EFEAD9;color:#16110D;font-family:Inter,system-ui,sans-serif;}",
+    { raw: true }
+  );
+
+  // ─── Plantilla de previsualización: vídeo + ficha tal como saldrá ──────────
+  var RefritoPreview = createClass({
+    render: function () {
+      var data    = this.props.entry.get('data');
+      var yt      = data.get('youtubeId') || '';
+      var nombre  = (data.get('interpreteCover') || '').toUpperCase();
+      var orig    = data.get('artistaOriginal') || '';
+      var cancion = data.get('tituloCancion') || '';
+      var fecha   = data.get('fecha') || '';
+      var pista   = data.get('numeroPista');
+      var texto   = data.get('textoCuratorial') || '';
+      var parrafos = String(texto).split(/\n\n+/).filter(function (p) { return p.trim(); });
+
+      var wrap = { maxWidth: '640px', margin: '0 auto', padding: '24px' };
+      var meta = { fontFamily: 'Space Mono, monospace', fontSize: '11px', letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(22,17,13,.5)' };
+
+      return h('div', { style: wrap }, [
+        // Cabecera de metadatos
+        h('div', { key: 'm', style: meta },
+          (pista ? 'Pista ' + pista + '  ·  ' : '') + (fecha || 'sin fecha')),
+
+        // Vídeo embebido (para escuchar mientras escribes)
+        yt
+          ? h('div', { key: 'v', style: { position: 'relative', paddingTop: '56.25%', margin: '14px 0', border: '3px solid #EF5226' } },
+              h('iframe', {
+                src: 'https://www.youtube-nocookie.com/embed/' + yt,
+                allow: 'encrypted-media; picture-in-picture',
+                style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 },
+              }))
+          : h('div', { key: 'v0', style: { margin: '14px 0', padding: '24px', background: 'rgba(22,17,13,.06)', textAlign: 'center', color: 'rgba(22,17,13,.4)', fontFamily: 'Space Mono, monospace', fontSize: '12px' } }, 'Pega el YouTube ID para ver el vídeo aquí'),
+
+        // Nombre grande
+        h('h1', { key: 'n', style: { fontFamily: 'Anton, sans-serif', fontSize: '52px', lineHeight: '.95', letterSpacing: '-.01em', color: '#C03C0C', margin: '8px 0 0' } }, nombre || '—'),
+
+        // Versiona a
+        h('p', { key: 's', style: { fontFamily: 'Caveat, cursive', fontSize: '24px', color: '#16110D', margin: '4px 0 20px' } },
+          '↺ versiona a ' + orig + (cancion ? ' · "' + cancion + '"' : '')),
+
+        // Texto curatorial
+        h('div', { key: 't', style: { borderTop: '1px solid rgba(22,17,13,.25)', paddingTop: '18px' } },
+          parrafos.length
+            ? parrafos.map(function (p, i) { return h('p', { key: i, style: { fontSize: '16px', lineHeight: '1.7', margin: '0 0 14px' } }, p.trim()); })
+            : h('p', { style: { color: 'rgba(22,17,13,.4)', fontStyle: 'italic' } }, 'Escribe aquí el texto curatorial…')),
+      ]);
+    },
+  });
+
+  CMS.registerPreviewTemplate('covers', RefritoPreview);
+  CMS.registerPreviewTemplate('proposals', RefritoPreview);
+  </script>
 </body>
 </html>
