@@ -85,10 +85,9 @@ module.exports = {
   minCalidad: 6,
 
   // ─── GEMINI (ritmo y reintentos para el tier gratuito) ───────────────────────
-  // Modelo a usar. gemini-2.0-flash-lite tiene cuota gratuita propia y más
-  // generosa que gemini-2.0-flash (que daba 429 por cuota). Otras opciones:
-  // 'gemini-2.0-flash', 'gemini-1.5-flash'.
-  geminiModel: 'gemini-2.0-flash-lite',
+  // Modelo a usar. Los gemini-2.0-* fueron retirados (404). Usamos la generación
+  // vigente. Si este también diera 404, el run lista los modelos disponibles.
+  geminiModel: 'gemini-2.5-flash',
   // false = clasifica por TEXTO (metadatos). Más rápido y fiable en gratuito.
   // true  = intenta analizar el VÍDEO real (mejor juicio, pero suele dar 429).
   geminiVideoAnalysis: false,

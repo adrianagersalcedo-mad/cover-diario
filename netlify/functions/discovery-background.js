@@ -96,6 +96,25 @@ async function fetchChannelSubs(channelIds) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Ante un 404 (modelo inexistente/retirado), lista UNA vez los modelos que sí
+// soportan generateContent, para saber qué id usar sin adivinar.
+let _modelsListed = false;
+async function listModelsOnce(key) {
+  if (_modelsListed) return;
+  _modelsListed = true;
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const usables = (data.models || [])
+      .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
+      .map((m) => m.name.replace('models/', ''));
+    console.log(`  ℹ Modelos disponibles (generateContent): ${usables.join(', ')}`);
+  } catch (e) {
+    console.warn(`  ⚠ No se pudo listar modelos: ${e.message}`);
+  }
+}
+
 // POST genérico a Gemini con reintento ante 429 (cuota/ritmo). Devuelve el JSON
 // parseado o null. Centraliza el manejo de errores de geminiEval/geminiEvalText.
 async function geminiGenerate(parts) {
@@ -126,6 +145,7 @@ async function geminiGenerate(parts) {
       if (!res.ok) {
         const err = await res.text();
         console.warn(`  ⚠ Gemini ${res.status} — ${err.slice(0, 150)}`);
+        if (res.status === 404) await listModelsOnce(key);
         return null;
       }
       const data = await res.json();
