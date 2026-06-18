@@ -87,7 +87,7 @@ async function aprobar(youtubeId) {
 
   prop.estado = 'aprobada';
   const encoded = Buffer.from(JSON.stringify(prop, null, 2) + '\n').toString('base64');
-  await ghPut(path, encoded, `proposal: ${youtubeId} aprobada vía Telegram (a la lista, sin fecha)`, file.sha);
+  await ghPut(path, encoded, `proposal: ${youtubeId} aprobada vía Telegram (a la lista, sin fecha) [skip ci]`, file.sha);
   return { ok: true };
 }
 
@@ -95,7 +95,7 @@ async function descartar(youtubeId) {
   const path = `content/proposals/${youtubeId}.json`;
   const file = await ghGet(path);
   if (!file) return { ok: false, msg: 'La propuesta ya no existe' };
-  await ghDelete(path, `proposal: ${youtubeId} descartada (Telegram)`, file.sha);
+  await ghDelete(path, `proposal: ${youtubeId} descartada (Telegram) [skip ci]`, file.sha);
   return { ok: true };
 }
 
@@ -155,8 +155,8 @@ async function programarSiguiente() {
     tags: prop.tags || [],
   };
   const encoded = Buffer.from(JSON.stringify(cover, null, 2) + '\n').toString('base64');
+  await ghDelete(path, `proposal: ${prop.youtubeId} programada [skip ci]`, sha);
   await ghPut(`content/covers/${fecha}.json`, encoded, `cover: programa ${prop.youtubeId} → ${fecha} (Telegram)`);
-  await ghDelete(path, `proposal: ${prop.youtubeId} programada`, sha);
   return { ok: true, fecha, numeroPista, prop, restantes: cola.length - 1 };
 }
 

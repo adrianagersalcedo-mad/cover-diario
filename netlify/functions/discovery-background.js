@@ -282,7 +282,7 @@ async function loadSeen() {
 async function saveSeen(ids, sha) {
   const sorted  = [...ids].sort();
   const encoded = Buffer.from(JSON.stringify(sorted, null, 2) + '\n').toString('base64');
-  await ghPut('content/proposals/_seen.json', encoded, 'discovery: actualiza índice _seen.json', sha);
+  await ghPut('content/proposals/_seen.json', encoded, 'discovery: actualiza índice _seen.json [skip ci]', sha);
 }
 
 // ─── FILTROS ──────────────────────────────────────────────────────────────────
@@ -384,7 +384,7 @@ async function writeProposal(video, geminiResult, sourceQuery) {
   const proposal = buildProposal(video, geminiResult, sourceQuery);
   const encoded  = Buffer.from(JSON.stringify(proposal, null, 2) + '\n').toString('base64');
   try {
-    await ghPut(path, encoded, `discovery: nueva propuesta ${video.id}`);
+    await ghPut(path, encoded, `discovery: nueva propuesta ${video.id} [skip ci]`);
   } catch (e) {
     if (e.message.includes('409')) {
       console.log(`  · ${video.id} conflicto (ya existe en otra ejecución) — omitido`);
