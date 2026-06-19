@@ -23,8 +23,12 @@ collections:
     extension: json
     slug: "{{fecha}}"
     identifier_field: id
-    summary: "Pista {{numeroPista}} · {{interpreteCover}} versiona a {{artistaOriginal}} · {{fecha}}"
-    sortable_fields: ["fecha", "numeroPista", "interpreteCover"]
+    summary: "📅 {{fecha}} · Pista {{numeroPista}} · {{interpreteCover}} → {{artistaOriginal}}"
+    sortable_fields:
+      fields: [fecha, numeroPista, interpreteCover]
+      default:
+        field: fecha
+        direction: descending
     view_filters:
       - label: "Este mes"
         field: fecha
@@ -33,7 +37,8 @@ collections:
       - label: "ID interno"
         name: id
         widget: string
-        hint: "Formato: cover-347"
+        required: false
+        hint: "Opcional. Formato: cover-347"
 
       - label: "YouTube ID"
         name: youtubeId
@@ -54,7 +59,8 @@ collections:
         widget: number
         value_type: int
         min: 1
-        hint: "Número correlativo del mixtape"
+        required: false
+        hint: "Opcional. Si programas con /programar en Telegram, se rellena solo."
 
       - label: "Título de la canción"
         name: tituloCancion
@@ -122,12 +128,12 @@ collections:
     summary: "{{estado}} · {{interpreteCover}} — {{tituloCancion}}"
     sortable_fields: ["estado", "interpreteCover"]
     view_filters:
-      - label: "Pendientes"
-        field: estado
-        pattern: "pendiente"
-      - label: "Aprobadas (pendiente de build)"
+      - label: "Aprobadas (en cola, sin fecha)"
         field: estado
         pattern: "aprobada"
+      - label: "Pendientes de revisar"
+        field: estado
+        pattern: "pendiente"
       - label: "Descartadas"
         field: estado
         pattern: "descartada"
