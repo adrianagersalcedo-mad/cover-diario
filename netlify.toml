@@ -20,6 +20,10 @@
   # Semanal: lunes a las 3:00 UTC (antes era diario "0 3 * * *")
   schedule = "0 3 * * 1"
 
+[functions."newsletter-daily"]
+  # Diario a las 7:00 UTC (~9:00 en España). Envía el cover del día si lo hay.
+  schedule = "0 7 * * *"
+
 [[edge_functions]]
   path     = "/pista.html"
   function = "pista-og"
