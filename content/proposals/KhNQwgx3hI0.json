@@ -1,21 +1,21 @@
 {
-  "youtubeId": "KhNQwgx3hI0",
-  "estado": "pendiente",
-  "tituloCancion": "A Change Is Gonna Come",
-  "interpreteCover": "Allie Sherlock",
-  "canalCoverUrl": "https://www.youtube.com/@AllieSherlockMusic",
-  "artistaOriginal": "Sam Cooke",
+  "textoCuratorial": "Sam Cooke la grabó en 1964, poco antes de morir, y se convirtió en uno de los himnos del movimiento por los derechos civiles. Hay un cansancio que arrastra en la voz pero con algo de esperanza.\n\nAllie Sherlock la canta en la calle, con la guitarra, lo acerca a la actualidad y en cierto modo lo demistifica",
   "videoOriginalUrl": "",
-  "textoCuratorial": "Sam Cooke la grabó en 1964, poco antes de morir, y se convirtió en uno de los himnos del movimiento por los derechos civiles. Hay un cansancio enorme en esa voz y, aun así, una certeza: el cambio va a llegar. Pocas canciones cargan tanto con tan poco.\n\nAllie Sherlock la canta en la calle, con la guitarra, y el contraste es lo bonito: una canción gigantesca a tamaño humano, en una acera, para quien pase. La emoción no necesita escenario.",
-  "miniatura": "https://i.ytimg.com/vi/KhNQwgx3hI0/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
-  "_videoTitulo": "Sam Cooke' A Change Is Going To Come Allie Sherlock Cover",
-  "_descubierto": "2026-06-18T07:16:39.850772Z",
+  "estado": "pendiente",
   "_query": "manual",
+  "artistaOriginal": "Sam Cooke",
+  "numeroPista": 11,
+  "canalCoverUrl": "https://www.youtube.com/@AllieSherlockMusic",
+  "_descubierto": "2026-06-18T07:16:39.850772Z",
+  "_videoTitulo": "Sam Cooke' A Change Is Going To Come Allie Sherlock Cover",
   "tags": [
     "soul",
     "acustico",
     "intimo"
-  ]
+  ],
+  "miniatura": "https://i.ytimg.com/vi/KhNQwgx3hI0/mqdefault.jpg",
+  "tituloCancion": "A Change Is Gonna Come",
+  "fecha": "2026-06-14",
+  "youtubeId": "KhNQwgx3hI0",
+  "interpreteCover": "Allie Sherlock"
 }
