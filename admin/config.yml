@@ -24,11 +24,7 @@ collections:
     slug: "{{fecha}}"
     identifier_field: id
     summary: "📅 {{fecha}} · Pista {{numeroPista}} · {{interpreteCover}} → {{artistaOriginal}}"
-    sortable_fields:
-      fields: [fecha, numeroPista, interpreteCover]
-      default:
-        field: fecha
-        direction: descending
+    sortable_fields: ["fecha", "numeroPista", "interpreteCover"]
     view_filters:
       - label: "Este mes"
         field: fecha
