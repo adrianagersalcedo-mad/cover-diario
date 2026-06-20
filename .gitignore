@@ -6,3 +6,4 @@ node_modules/
 .netlify
 instagram.html
 panel.html
+content/covers/_list.json
