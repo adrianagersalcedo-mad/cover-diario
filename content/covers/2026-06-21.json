@@ -1,18 +1,14 @@
 {
+  "id": "cover-10",
   "youtubeId": "DexHghBPKBw",
-  "estado": "pendiente",
+  "fecha": "2026-06-21",
+  "numeroPista": 10,
   "tituloCancion": "(What's So Funny 'Bout) Peace, Love and Understanding",
   "interpreteCover": "Jordan Dollak",
   "canalCoverUrl": "https://www.youtube.com/@jordandollak4832",
   "artistaOriginal": "Nick Lowe",
   "videoOriginalUrl": "",
   "textoCuratorial": "La escribió Nick Lowe en los setenta y la hizo eterna Elvis Costello: una pregunta que suena a himno y a desesperación a la vez. ¿Qué tiene de gracioso la paz, el amor y el entendimiento? La ironía es que la cantas a grito pelado porque ya no te queda otra.\n\nJordan Dollak la baja de revoluciones y la lleva a lo acústico. Sin la pared de sonido, la pregunta se queda desnuda, casi incómoda — y funciona, porque era una buena pregunta desde el principio.",
-  "miniatura": "https://i.ytimg.com/vi/DexHghBPKBw/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
-  "_videoTitulo": "(What's so Funny 'Bout) Peace, Love, and Understanding (Nick Lowe / Elvis Costello cover)",
-  "_descubierto": "2026-06-18T07:16:39.850772Z",
-  "_query": "manual",
   "tags": [
     "acustico",
     "rock"
