@@ -1,6 +1,5 @@
 {
   "youtubeId": "X3dDIg0jdhk",
-  "estado": "pendiente",
   "tituloCancion": "Love Is Everywhere (Beware)",
   "interpreteCover": "John Hermle",
   "canalCoverUrl": "https://www.youtube.com/@ModernHistoryMusic",
@@ -8,9 +7,10 @@
   "videoOriginalUrl": "",
   "textoCuratorial": "Wilco llevan décadas moviéndose entre el folk-rock y la rareza sonora, y \"Love Is Everywhere (Beware)\" es de sus canciones más luminosas recientes: una advertencia amable envuelta en melodía cálida.\n\nJohn Hermle la interpreta en acústico y deja que ese contraste —el aviso en la letra, el calor en la música— siga siendo el corazón de la canción.",
   "miniatura": "https://i.ytimg.com/vi/X3dDIg0jdhk/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
+  "fecha": "2026-07-14",
+  "numeroPista": 33,
   "_videoTitulo": "\"Love is Everywhere (Beware)\"-Wilco Cover by John Hermle",
   "_descubierto": "2026-07-14T14:30:21.908919Z",
-  "_query": "manual"
+  "_query": "manual",
+  "id": "cover-33"
 }

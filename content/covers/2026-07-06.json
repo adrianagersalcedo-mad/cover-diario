@@ -1,6 +1,5 @@
 {
   "youtubeId": "5edJs8dftSc",
-  "estado": "pendiente",
   "tituloCancion": "One Vision",
   "interpreteCover": "Ota Novotný",
   "canalCoverUrl": "https://www.youtube.com/@otasnovotny",
@@ -8,9 +7,10 @@
   "videoOriginalUrl": "",
   "textoCuratorial": "\"One Vision\" cerraba los ochenta de Queen con un mensaje casi ingenuo de unidad, construido sobre un riff que crece hasta el estallido. Menos citada que sus grandes himnos, pero con la misma ambición de estadio.\n\nOta Novotný la aborda solo, sin la maquinaria de banda detrás, y el reto es justo ese: sostener una canción pensada para llenar espacios inmensos con una sola voz y un instrumento.",
   "miniatura": "https://i.ytimg.com/vi/5edJs8dftSc/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
+  "fecha": "2026-07-06",
+  "numeroPista": 25,
   "_videoTitulo": "One Vision (Queen Cover)",
   "_descubierto": "2026-07-14T14:30:21.908919Z",
-  "_query": "manual"
+  "_query": "manual",
+  "id": "cover-25"
 }

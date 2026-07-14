@@ -1,6 +1,5 @@
 {
   "youtubeId": "VYQojDcrgno",
-  "estado": "pendiente",
   "tituloCancion": "Tonight, Tonight",
   "interpreteCover": "Jacob & the Dazey Chain",
   "canalCoverUrl": "https://www.youtube.com/@CoverNation",
@@ -8,9 +7,10 @@
   "videoOriginalUrl": "",
   "textoCuratorial": "The Smashing Pumpkins construyeron en \"Tonight, Tonight\" una épica de cuerdas y optimismo noventero, con un vídeo tan recordado como la canción misma: melancolía vestida de celebración.\n\nJacob & the Dazey Chain la llevan a un formato más pequeño, sin la orquesta, y dejan que sea la melodía —y no la producción— la que cargue con toda esa grandiosidad.",
   "miniatura": "https://i.ytimg.com/vi/VYQojDcrgno/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
+  "fecha": "2026-07-19",
+  "numeroPista": 38,
   "_videoTitulo": "Jacob & the Dazey Chain - Tonight, Tonight | The Smashing Pumpkins Cover",
   "_descubierto": "2026-07-14T14:30:21.908919Z",
-  "_query": "manual"
+  "_query": "manual",
+  "id": "cover-38"
 }

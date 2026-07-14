@@ -1,6 +1,5 @@
 {
   "youtubeId": "oQtmaogk-kw",
-  "estado": "pendiente",
   "tituloCancion": "Take the Long Way Home",
   "interpreteCover": "Corey Heuvel",
   "canalCoverUrl": "https://www.youtube.com/@coreyheuvel",
@@ -8,9 +7,10 @@
   "videoOriginalUrl": "",
   "textoCuratorial": "Supertramp construyó en \"Take the Long Way Home\" una de esas canciones sobre sentirse extraño en tu propia vida, con la armónica como firma inconfundible y un estribillo que suena a resignación amable.\n\nCorey Heuvel la reduce a guitarra y voz, y sin la producción de los setenta de por medio, la melodía sostiene perfectamente el peso de la letra.",
   "miniatura": "https://i.ytimg.com/vi/oQtmaogk-kw/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
+  "fecha": "2026-07-10",
+  "numeroPista": 29,
   "_videoTitulo": "Take the Long Way Home | Supertramp (acoustic cover)",
   "_descubierto": "2026-07-14T14:30:21.908919Z",
-  "_query": "manual"
+  "_query": "manual",
+  "id": "cover-29"
 }

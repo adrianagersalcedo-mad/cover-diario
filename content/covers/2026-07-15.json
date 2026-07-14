@@ -1,6 +1,5 @@
 {
   "youtubeId": "iIkbcW_XLb4",
-  "estado": "pendiente",
   "tituloCancion": "Give Me Love (Give Me Peace on Earth)",
   "interpreteCover": "Katy Jackson",
   "canalCoverUrl": "https://www.youtube.com/@KatysTheName",
@@ -8,9 +7,10 @@
   "videoOriginalUrl": "",
   "textoCuratorial": "George Harrison, el Beatle más espiritual, convirtió una plegaria personal en canción número uno en 1973: \"Give Me Love\" pide, literalmente, amor y paz, sin metáforas de por medio.\n\nKaty Jackson la canta con esa misma sinceridad directa, y en su voz el ruego suena, si acaso, todavía más desnudo.",
   "miniatura": "https://i.ytimg.com/vi/iIkbcW_XLb4/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
+  "fecha": "2026-07-15",
+  "numeroPista": 34,
   "_videoTitulo": "Give Me Love (Give Me Peace On Earth) - George Harrison (Cover)",
   "_descubierto": "2026-07-14T14:30:21.908919Z",
-  "_query": "manual"
+  "_query": "manual",
+  "id": "cover-34"
 }

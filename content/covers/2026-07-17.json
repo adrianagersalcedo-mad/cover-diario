@@ -1,6 +1,5 @@
 {
   "youtubeId": "67T9OE5dnX4",
-  "estado": "pendiente",
   "tituloCancion": "Thirteen",
   "interpreteCover": "The Wild Things",
   "canalCoverUrl": "https://www.youtube.com/@markcurtis7460",
@@ -8,9 +7,10 @@
   "videoOriginalUrl": "",
   "textoCuratorial": "Big Star nunca vendieron discos en su época, pero \"Thirteen\" se convirtió con los años en la canción de referencia sobre el primer amor adolescente: torpe, tierna, sin ironía.\n\nThe Wild Things la graban en una sesión de cocina, sin pulir, y ese punto crudo es fiel al espíritu de una banda que tampoco buscaba perfección, sino verdad.",
   "miniatura": "https://i.ytimg.com/vi/67T9OE5dnX4/mqdefault.jpg",
-  "fecha": "",
-  "numeroPista": null,
+  "fecha": "2026-07-17",
+  "numeroPista": 36,
   "_videoTitulo": "The Wild Things - Kitchen Sessions #1 - Big Star \"Thirteen\" (cover)",
   "_descubierto": "2026-07-14T14:30:21.908919Z",
-  "_query": "manual"
+  "_query": "manual",
+  "id": "cover-36"
 }
