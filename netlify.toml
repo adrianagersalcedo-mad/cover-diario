@@ -46,6 +46,13 @@
   status = 200
   force  = false
 
+# Página de prueba (demo) — ruta limpia
+[[redirects]]
+  from   = "/pruebaseptiembre"
+  to     = "/pruebaseptiembre.html"
+  status = 200
+  force  = false
+
 [[redirects]]
   from   = "/og-image/:fecha.png"
   to     = "/.netlify/functions/og-image?fecha=:fecha"
